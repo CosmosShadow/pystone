@@ -40,13 +40,53 @@ class Token(object):
 Token.EOF = Token(-1)
 Token.EOL = '\\n'
 
+class NumToken(Token):
+	def __init__(self, line_no, value):
+		super(NumToken, self).__init__(line_no)
+		self._value = value
+
+	@property
+	def is_number(self):
+		return True
+
+	@property
+	def number(self):
+		return self._value
+
+	@property
+	def text(self):
+		return str(self._value)
+
+
+class IdToken(Token):
+	def __init__(self, line_no, text):
+		super(IdToken, self).__init__(line_no)
+		self._text = text
+
+	@property
+	def is_identifier(self):
+		return True
+
+	@property
+	def text(self):
+		return self._text
+
+class StrToken(Token):
+	def __init__(self, line_no, string):
+		super(StrToken, self).__init__(line_no)
+		self._string = string
+
+	@property
+	def is_string(self):
+		return True
+
+	@property
+	def text(self):
+		return self._string
+
+
 class StoneException(Exception):
 	pass
-
-
-
-
-
 
 
 

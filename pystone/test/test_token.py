@@ -4,9 +4,9 @@ from __future__ import print_function
 from __future__ import division
 
 from nose.tools import *
-from ..token import *
+from pystone.token import *
 
-class TestSome(object):
+class TestToken(object):
 	@classmethod
 	def setup_class(klass):
 		pass

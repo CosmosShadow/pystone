@@ -5,7 +5,7 @@ from __future__ import division
 import re
 import string
 import collections
-from token import *
+from .token import *
 
 
 class Lexer(object):
@@ -15,9 +15,9 @@ class Lexer(object):
 	punctuation = punctuation.replace('/', '')
 	re_number = "[0-9]+"
 	re_identifier = "[A-Za-z][A-Za-z0-9]*|==|<=|>=|&&|\\|\\||[%s]" % punctuation
-	re_string = '\"[\\\\"|\\\\\\\\|\\\\n|[^\"]]*\"'
+	re_string = '"((\\"|\\\\|\\n|[^"])*)"'
 	re_comment = "//.*"
-	regex_pat = "\\s*((%s)|(%s)|(%s)|(%s))?" % (re_number, re_string, re_identifier, re_comment)
+	regex_pat = "\\s*((%s)|(%s)|(%s)|%s)?" % (re_number, re_identifier, re_comment, re_string)
 
 	def __init__(self, source_codes):
 		super(Lexer, self).__init__()
@@ -64,7 +64,7 @@ class Lexer(object):
 		self._queue.append(IdToken(line_no, Token.EOL));
 
 	def add_token(self, line_no, matcher):
-		match, number, string, identifier, comment = matcher
+		match, number, identifier, comment, string, sting_las_char = matcher
 		if len(match) > 0 and len(comment) == 0:
 			if len(number) > 0:
 				token = NumToken(line_no, int(number))
@@ -131,13 +131,7 @@ class ParseException(Exception):
 			super(ParseException, self)(msg)
 
 
-if __name__ == '__main__':
-	source_codes = ['hello world //comment', 'a == "string"', 'b=12']
-	lexer = Lexer(source_codes)
-	token = lexer.read()
-	while token != Token.EOF:
-		print('==> ' + token.__class__.__name__ + ': ' + token.text)
-		token = lexer.read()
+
 
 
 

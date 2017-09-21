@@ -5,6 +5,9 @@ from __future__ import division
 
 
 class Token(object):
+	"""token(词)，区别于单词
+	定义三种类型: 标识符、整型字面量、字符串字面量
+	"""
 	def __init__(self, line):
 		super(Token, self).__init__()
 		self._line_number = line

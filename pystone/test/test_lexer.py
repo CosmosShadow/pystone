@@ -7,20 +7,6 @@ from nose.tools import *
 from pystone.lexer import *
 
 class TestLexer(object):
-	@classmethod
-	def setup_class(klass):
-		pass
-
-	@classmethod
-	def teardown_class(klass):
-		pass
-
-	def setup(self):
-		pass
-
-	def teardown(self):
-		pass
-
 	def test_comment(self):
 		source_codes = ['hello world //comment']
 		lexer = Lexer(source_codes)

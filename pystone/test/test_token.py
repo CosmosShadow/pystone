@@ -7,19 +7,8 @@ from nose.tools import *
 from pystone.token import *
 
 class TestToken(object):
-	@classmethod
-	def setup_class(klass):
-		pass
-
-	@classmethod
-	def teardown_class(klass):
-		pass
-
 	def setup(self):
 		self._token = Token(1)
-
-	def teardown(self):
-		pass
 
 	def test_line_number(self):
 		assert_equal(self._token.line_number, 1)
@@ -31,6 +20,51 @@ class TestToken(object):
 
 	def test_text(self):
 		assert_equal(self._token.text, '')
+
+	@raises(StoneException)
+	def test_number(self):
+		self._token.number
+
+
+class TestNumToken(object):
+	def setup(self):
+		self._token = NumToken(1, 20)
+
+	def test_number(self):
+		assert_equal(self._token.line_number, 1)
+		assert_true(self._token.is_number)
+		assert_false(self._token.is_identifier)
+		assert_false(self._token.is_string)
+		assert_equal(self._token.number, 20)
+		assert_equal(self._token.text, '20')
+
+
+class TestIdToken(object):
+	def setup(self):
+		self._token = IdToken(1, 'hello')
+
+	def test_number(self):
+		assert_equal(self._token.line_number, 1)
+		assert_false(self._token.is_number)
+		assert_true(self._token.is_identifier)
+		assert_false(self._token.is_string)
+		assert_equal(self._token.text, 'hello')
+
+	@raises(StoneException)
+	def test_number(self):
+		self._token.number
+
+
+class TestStrToken(object):
+	def setup(self):
+		self._token = StrToken(1, 'hello')
+
+	def test_number(self):
+		assert_equal(self._token.line_number, 1)
+		assert_false(self._token.is_number)
+		assert_false(self._token.is_identifier)
+		assert_true(self._token.is_string)
+		assert_equal(self._token.text, 'hello')
 
 	@raises(StoneException)
 	def test_number(self):

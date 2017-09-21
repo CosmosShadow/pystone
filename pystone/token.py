@@ -37,7 +37,9 @@ class Token(object):
 	def text(self):
 		return ""
 
+# end of file
 Token.EOF = Token(-1)
+# end of line
 Token.EOL = '\\n'
 
 class NumToken(Token):

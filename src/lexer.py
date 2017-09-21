@@ -3,17 +3,21 @@ from __future__ import absolute_import
 from __future__ import print_function
 from __future__ import division
 import re
+import string
 import collections
 from token import *
 
 
 class Lexer(object):
 	"""词法解析器"""
+	punctuation = string.punctuation
+	punctuation = punctuation.replace('"', '')
+	punctuation = punctuation.replace('/', '')
 	re_number = "[0-9]+"
-	re_identifier = "[A-Za-z][A-Za-z0-9]*|==|<=|>=|&&|\|\||\p{Punct}"
+	re_identifier = "[A-Za-z][A-Za-z0-9]*|==|<=|>=|&&|\\|\\||[%s]" % punctuation
 	re_string = '\"[\\\\"|\\\\\\\\|\\\\n|[^\"]]*\"'
 	re_comment = "//.*"
-	regex_pat = "\\s*((%s)|(%s)|(%s)|(%s))?" % (re_number, re_identifier, re_comment, re_string)
+	regex_pat = "\\s*((%s)|(%s)|(%s)|(%s))?" % (re_number, re_string, re_identifier, re_comment)
 
 	def __init__(self, source_codes):
 		super(Lexer, self).__init__()
@@ -32,7 +36,6 @@ class Lexer(object):
 	def read(self):
 		if self.fill_queue(0):
 			return self._queue.popleft()
-			exit()
 		else:
 			return Token.EOF
 
@@ -43,7 +46,7 @@ class Lexer(object):
 			return Token.EOF
 
 	def fill_queue(self, index):
-		while index + 1 >= len(self._queue):
+		while index + 1 > len(self._queue):
 			if self._has_more:
 				self.read_line()
 			else:
@@ -61,7 +64,7 @@ class Lexer(object):
 		self._queue.append(IdToken(line_no, Token.EOL));
 
 	def add_token(self, line_no, matcher):
-		match, number, identifier, comment, string = matcher
+		match, number, string, identifier, comment = matcher
 		if len(match) > 0 and len(comment) == 0:
 			if len(number) > 0:
 				token = NumToken(line_no, int(number))
@@ -129,11 +132,11 @@ class ParseException(Exception):
 
 
 if __name__ == '__main__':
-	source_codes = ['hello world //comment', 'a = "string"', 'b=12']
+	source_codes = ['hello world //comment', 'a == "string"', 'b=12']
 	lexer = Lexer(source_codes)
 	token = lexer.read()
 	while token != Token.EOF:
-		print('==> ' + token.text)
+		print('==> ' + token.__class__.__name__ + ': ' + token.text)
 		token = lexer.read()
 
 

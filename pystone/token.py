@@ -41,6 +41,7 @@ Token.EOF = Token(-1)
 Token.EOL = '\\n'
 
 class NumToken(Token):
+	"""整型字面量"""
 	def __init__(self, line_no, value):
 		super(NumToken, self).__init__(line_no)
 		self._value = value
@@ -59,6 +60,7 @@ class NumToken(Token):
 
 
 class IdToken(Token):
+	"""标识符"""
 	def __init__(self, line_no, text):
 		super(IdToken, self).__init__(line_no)
 		self._text = text
@@ -72,6 +74,7 @@ class IdToken(Token):
 		return self._text
 
 class StrToken(Token):
+	"""字符串字面量"""
 	def __init__(self, line_no, string):
 		super(StrToken, self).__init__(line_no)
 		self._string = string

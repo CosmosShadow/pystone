@@ -7,6 +7,7 @@ from abc import ABCMeta, abstractmethod
 
 
 class ASTree(object):
+	"""抽象语法树，作语法树元素的基类"""
 	def __init__(self):
 		super(ASTree, self).__init__()
 		self._children = []
@@ -29,6 +30,7 @@ class ASTree(object):
 
 
 class ASTLeaf(ASTree):
+	"""抽象语法树列表: 就是叶子节点"""
 	def __init__(self, token):
 		super(ASTLeaf, self).__init__()
 		self._token = token
@@ -45,6 +47,7 @@ class ASTLeaf(ASTree):
 
 
 class ASTList(ASTree):
+	"""抽象语法树列表: 就是中间结节"""
 	def __init__(self, children):
 		super(ASTList, self).__init__()
 		self._children = children
@@ -60,16 +63,19 @@ class ASTList(ASTree):
 
 
 class NumberLiteral(ASTLeaf):
+	"""数字字面量"""
 	def value(self):
 		return self._token.number
 
 
 class Name(ASTLeaf):
+	"""变量名"""
 	def name(self):
 		return self._token.text
 
 
 class BinaryExpr(ASTList):
+	"""二元表达式"""
 	def left(self):
 		return self.child(0)
 

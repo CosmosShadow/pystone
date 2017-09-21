@@ -9,7 +9,10 @@ from .token import *
 
 
 class Lexer(object):
-	"""词法解析器"""
+	"""词法解析器
+	使用正则来进行词法解析
+	主要元素有: 数字、标识符、字符串字面量、注释
+	"""
 	punctuation = string.punctuation
 	punctuation = punctuation.replace('"', '')
 	punctuation = punctuation.replace('/', '')
@@ -26,7 +29,7 @@ class Lexer(object):
 		self._has_more = True
 		self._queue = collections.deque()
 
-	def next_line(self):
+	def _next_line(self):
 		if self._current_line < len(self._source_codes):
 			self._current_line += 1
 			return self._source_codes[self._current_line-1]
@@ -34,18 +37,21 @@ class Lexer(object):
 			return None
 
 	def read(self):
+		"""读取下一个token，内容游标会往前走一步，直到文件末尾"""
 		if self.fill_queue(0):
 			return self._queue.popleft()
 		else:
 			return Token.EOF
 
 	def peek(self, index):
+		"""读取当前游标前index(0-base)位置的token，游标不变化，主要用于语法分析"""
 		if self.fill_queue(index):
 			return self._queue[index]
 		else:
 			return Token.EOF
 
 	def fill_queue(self, index):
+		"""填满解析出来的token队列到index(0-base)"""
 		while index + 1 > len(self._queue):
 			if self._has_more:
 				self.read_line()
@@ -54,7 +60,7 @@ class Lexer(object):
 		return True
 
 	def read_line(self):
-		line = self.next_line()
+		line = self._next_line()
 		if line is None:
 			self._has_more = False
 			return

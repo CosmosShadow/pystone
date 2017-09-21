@@ -2,34 +2,48 @@
 from __future__ import absolute_import
 from __future__ import print_function
 from __future__ import division
+import re
 import collections
-from .token import *
+from token import *
 
 
 class Lexer(object):
 	"""词法解析器"""
-	regex_pat = "\\s*((//.*)|([0-9]+)|(\"(\\\\\"|\\\\\\\\|\\\\n|[^\"])*\")|[A-Za-z][A-Za-z0-9]*|==|<=|>=|&&|\\|\\||\\p{Punct})?"
+	re_number = "[0-9]+"
+	re_identifier = "[A-Za-z][A-Za-z0-9]*|==|<=|>=|&&|\|\||\p{Punct}"
+	re_string = '\"[\\\\"|\\\\\\\\|\\\\n|[^\"]]*\"'
+	re_comment = "//.*"
+	regex_pat = "\\s*((%s)|(%s)|(%s)|(%s))?" % (re_number, re_identifier, re_comment, re_string)
 
-	def __init__(self, reader):
+	def __init__(self, source_codes):
 		super(Lexer, self).__init__()
-		self._reader = reader
+		self._source_codes = source_codes
+		self._current_line = 0
 		self._has_more = True
 		self._queue = collections.deque()
 
+	def next_line(self):
+		if self._current_line < len(self._source_codes):
+			self._current_line += 1
+			return self._source_codes[self._current_line-1]
+		else:
+			return None
+
 	def read(self):
-		if len(self._queue) > 0:
+		if self.fill_queue(0):
 			return self._queue.popleft()
+			exit()
 		else:
 			return Token.EOF
 
 	def peek(self, index):
-		if len(self._queue) > 0:
+		if self.fill_queue(index):
 			return self._queue[index]
 		else:
 			return Token.EOF
 
-	def fill_queue(self, count):
-		while count >= len(self._queue):
+	def fill_queue(self, index):
+		while index + 1 >= len(self._queue):
 			if self._has_more:
 				self.read_line()
 			else:
@@ -37,135 +51,94 @@ class Lexer(object):
 		return True
 
 	def read_line(self):
-		line = self._reader.next()
+		line = self.next_line()
 		if line is None:
 			self._has_more = False
 			return
+		line_no = self._current_line
+		for matcher in re.findall(self.regex_pat, line):
+			self.add_token(line_no, matcher)
+		self._queue.append(IdToken(line_no, Token.EOL));
 
-        int lineNo = self._reader.getLineNumber();
-
-        Matcher matcher = pattern.matcher(line);
-        matcher.useTransparentBounds(true).useAnchoringBounds(false);
-        int pos = 0;
-        int endPos = line.length();
-        while (pos < endPos) {
-            matcher.region(pos, endPos);
-            if (matcher.lookingAt()) {
-                addToken(lineNo, matcher);
-                pos = matcher.end();
-            }
-            else
-            throw new ParseException("bad token at line " + lineNo);
-        }
-        queue.add(new IdToken(lineNo, Token.EOL));
-    }
+	def add_token(self, line_no, matcher):
+		match, number, identifier, comment, string = matcher
+		if len(match) > 0 and len(comment) == 0:
+			if len(number) > 0:
+				token = NumToken(line_no, int(number))
+			if len(identifier) > 0:
+				token = IdToken(line_no, identifier)
+			if len(string) > 0:
+				token = StrToken(line_no, string)
+			self._queue.append(token)
 
 
 
+class NumToken(Token):
+	def __init__(self, line_no, value):
+		super(NumToken, self).__init__(line_no)
+		self._value = value
 
-package stone;
+	@property
+	def is_number(self):
+		return True
 
-import java.io.IOException;
-import java.io.LineNumberReader;
-import java.io.Reader;
-import java.util.ArrayList;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
+	@property
+	def number(self):
+		return self._value
 
-public class Lexer {
-    private boolean fillQueue(int i) throws ParseException {
-        while (i >= queue.size())
-            if (hasMore)
-                readLine();
-            else
-                return false;
-        return true;
-    }
-    
-    protected void addToken(int lineNo, Matcher matcher) {
-        String m = matcher.group(1);
-        if (m != null) // if not a space
-            if (matcher.group(2) == null) { // if not a comment
-                Token token;
-                if (matcher.group(3) != null)
-                    token = new NumToken(lineNo, Integer.parseInt(m));
-                else if (matcher.group(4) != null)
-                    token = new StrToken(lineNo, toStringLiteral(m));
-                else
-                    token = new IdToken(lineNo, m);
-                queue.add(token);
-            }
-    }
-    protected String toStringLiteral(String s) {
-        StringBuilder sb = new StringBuilder();
-        int len = s.length() - 1;
-        for (int i = 1; i < len; i++) {
-            char c = s.charAt(i);
-            if (c == '\\' && i + 1 < len) {
-                int c2 = s.charAt(i + 1);
-                if (c2 == '"' || c2 == '\\')
-                    c = s.charAt(++i);
-                else if (c2 == 'n') {
-                    ++i;
-                    c = '\n';
-                }
-            }
-            sb.append(c);
-        }
-        return sb.toString();
-    }
-
-    protected static class NumToken extends Token {
-        private int value;
-
-        protected NumToken(int line, int v) {
-            super(line);
-            value = v;
-        }
-        public boolean isNumber() { return true; }
-        public String getText() { return Integer.toString(value); }
-        public int getNumber() { return value; }
-    }
-
-    protected static class IdToken extends Token {
-        private String text;
-        protected IdToken(int line, String id) {
-            super(line);
-            text = id;
-        }
-        public boolean isIdentifier() { return true; }
-        public String getText() { return text; }
-    }
-
-    protected static class StrToken extends Token {
-        private String literal;
-        StrToken(int line, String str) {
-            super(line);
-            literal = str;
-        }
-        public boolean isString() { return true; }
-        public String getText() { return literal; }
-    }
-}
+	@property
+	def text(self):
+		return str(self._value)
 
 
-public class ParseException extends Exception {
-    public ParseException(Token t) {
-        this("", t);
-    }
-    public ParseException(String msg, Token t) {
-        super("syntax error around " + location(t) + ". " + msg);
-    }
-    private static String location(Token t) {
-        if (t == Token.EOF)
-            return "the last line";
-        else
-            return "\"" + t.getText() + "\" at line " + t.getLineNumber();
-    }
-    public ParseException(IOException e) {
-        super(e);
-    }
-    public ParseException(String msg) {
-        super(msg);
-    }
-}
+class IdToken(Token):
+	def __init__(self, line_no, text):
+		super(IdToken, self).__init__(line_no)
+		self._text = text
+
+	@property
+	def is_identifier(self):
+		return True
+
+	@property
+	def text(self):
+		return self._text
+
+class StrToken(Token):
+	def __init__(self, line_no, string):
+		super(StrToken, self).__init__(line_no)
+		self._string = string
+
+	@property
+	def is_string(self):
+		return True
+
+	@property
+	def text(self):
+		return self._string
+
+
+class ParseException(Exception):
+	def __init__(self, msg, token=None):
+		if token is None:
+			super(ParseException, self)(msg)
+		else:
+			location = "the last line" if token == Token.EOF else "\"" + t.getText() + "\" at line " + str(token.line_number)
+			"syntax error around " + location + ". " + msg
+			super(ParseException, self)(msg)
+
+
+if __name__ == '__main__':
+	source_codes = ['hello world //comment', 'a = "string"', 'b=12']
+	lexer = Lexer(source_codes)
+	token = lexer.read()
+	while token != Token.EOF:
+		print('==> ' + token.text)
+		token = lexer.read()
+
+
+
+
+
+
+		

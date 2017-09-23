@@ -148,127 +148,61 @@ class Skip(Leaf):
 		pass
 
 
+class Operator(object):
+	def __init__(self, value, left_assoc):
+		self.value = value
+		self.left_assoc = left_assoc
+
+
+class Operators(object):
+	def __init__(self):
+		self._operaters = {}
+
+	def add(self, name, value, leftAssoc):
+		self._operaters[name] = Operator(value, leftAssoc)
+
+	def __getitem__(self, key):
+		return self._operaters[key]
+
+
+class Expr(Element):
+	def __init__(self, factor, operators):
+		self._factor = factor
+		self._operaters = operators
+
+	def parse(lexer, astree_list):
+		astree_right = self._factor.parse(lexer)
+		operator_next = self.next_operator(lexer)	#Precedence
+		while operator_next is not None:
+			astree_right = self.do_shift(lexer, astree_right, operator_next.value)
+			operator_next = self.next_operator(lexer)
+		astree_list.append(astree_right)
+
+	def do_shift(self, lexer, astree_left, operator_value):
+		astree_right = self._factor.parse(lexer)
+		operator_next = self.next_operator(lexer)	#Precedence
+		while operator_next is not None and self.right_is_expr(operator_value, operator_next):
+			astree_right = do_shift(lexer, astree_right, operator_next.value);
+			operator_next = self.next_operator(lexer)
+		return [astree_left, ASTLeaf(lexer.read()), astree_right]
+
+	def next_operator(self, lexer):
+		token = lexer.peek(0)
+		return self._operaters[token.text] if token.is_identifier else None
+
+	def right_is_expr(operator_value, operator_next):
+		if operator_next.left_assoc:
+			return operator_value < operator_next.value
+		else:
+			return operator_value <= operator_next.value
+
+	def match(self, lexer):
+		return self._factor.match(lexer)
+
+
+
 class Parser(object):
-    
-
-    public static class Precedence {
-        int value;
-        boolean leftAssoc; // left associative
-        public Precedence(int v, boolean a) {
-           value = v; leftAssoc = a;
-        }
-    }
-
-    public static class Operators extends HashMap<String,Precedence> {
-        public static boolean LEFT = true;
-        public static boolean RIGHT = false;
-        public void add(String name, int prec, boolean leftAssoc) {
-            put(name, new Precedence(prec, leftAssoc));
-        }
-    }
-
-    protected static class Expr extends Element {
-        protected Factory factory;
-        protected Operators ops;
-        protected Parser factor;
-        protected Expr(Class<? extends ASTree> clazz, Parser exp, Operators map)
-        {
-            factory = Factory.getForASTList(clazz);
-            ops = map;
-            factor = exp;
-        }
-        public void parse(Lexer lexer, List<ASTree> res) throws ParseException {
-            ASTree right = factor.parse(lexer);
-            Precedence prec;
-            while ((prec = nextOperator(lexer)) != null)
-                right = doShift(lexer, right, prec.value);
-
-            res.add(right);
-        }
-        private ASTree doShift(Lexer lexer, ASTree left, int prec)
-            throws ParseException
-        {
-            ArrayList<ASTree> list = new ArrayList<ASTree>();
-            list.add(left);
-            list.add(new ASTLeaf(lexer.read()));
-            ASTree right = factor.parse(lexer);
-            Precedence next;
-            while ((next = nextOperator(lexer)) != null
-                    && rightIsExpr(prec, next))
-                right = doShift(lexer, right, next.value);
-
-            list.add(right);
-            return factory.make(list);
-        }
-        private Precedence nextOperator(Lexer lexer) throws ParseException {
-            Token t = lexer.peek(0);
-            if (t.isIdentifier())
-                return ops.get(t.getText());
-            else
-                return null;
-        }
-        private static boolean rightIsExpr(int prec, Precedence nextPrec) {
-            if (nextPrec.leftAssoc)
-                return prec < nextPrec.value;
-            else
-                return prec <= nextPrec.value;
-        }
-        protected boolean match(Lexer lexer) throws ParseException {
-            return factor.match(lexer);
-        }
-    }
-
-    public static final String factoryName = "create";
-    protected static abstract class Factory {
-        protected abstract ASTree make0(Object arg) throws Exception;
-        protected ASTree make(Object arg) {
-            try {
-                return make0(arg);
-            } catch (IllegalArgumentException e1) {
-                throw e1;
-            } catch (Exception e2) {
-                throw new RuntimeException(e2); // this compiler is broken.
-            }
-        }
-        protected static Factory getForASTList(Class<? extends ASTree> clazz) {
-            Factory f = get(clazz, List.class);
-            if (f == null)
-                f = new Factory() {
-                    protected ASTree make0(Object arg) throws Exception {
-                        List<ASTree> results = (List<ASTree>)arg;
-                        if (results.size() == 1)
-                            return results.get(0);
-                        else
-                            return new ASTList(results);
-                    }
-                };
-            return f;
-        }
-        protected static Factory get(Class<? extends ASTree> clazz, Class<?> argType)
-        {
-            if (clazz == null)
-                return null;
-            try {
-                final Method m = clazz.getMethod(factoryName, new Class<?>[] { argType });
-                return new Factory() {
-                    protected ASTree make0(Object arg) throws Exception {
-                        return (ASTree)m.invoke(null, arg);
-                    }
-                };
-            } catch (NoSuchMethodException e) {}
-            try {
-                final Constructor<? extends ASTree> c = clazz.getConstructor(argType);
-                return new Factory() {
-                    protected ASTree make0(Object arg) throws Exception {
-                        return c.newInstance(arg);
-                    }
-                };
-            } catch (NoSuchMethodException e) {
-                throw new RuntimeException(e);
-            }
-        }
-    }
-
+	
     protected List<Element> elements;
     protected Factory factory;
     public Parser(Class<? extends ASTree> clazz) {

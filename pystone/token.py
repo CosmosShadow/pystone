@@ -37,6 +37,10 @@ class Token(object):
 	def text(self):
 		return ""
 
+	def __str__(self):
+		return self.text
+
+
 # end of file
 Token.EOF = Token(-1)
 # end of line

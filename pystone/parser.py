@@ -13,8 +13,8 @@ import java.lang.reflect.Constructor;
 
 
 class ParseException(Exception):
-	def __init__(self, msg):
-		super(ParseException, self).__init__(str(msg))
+	def __init__(self, token, msg=''):
+		super(ParseException, self).__init__((token, msg))
 
 
 class Element(object):
@@ -116,47 +116,40 @@ class StrToken(AToken):
 		return token.is_string
 
 
+class Leaf(Element):
+	def __init__(self, tokens):
+		self._tokens = tokens
+
+	def parse(self, lexer, astree_list):
+		token = lexer.read()
+		if token.is_identifier:
+			for _token in self._tokens:
+				if token.text == _token.text:
+					astree_list.append(ASTLeaf(token))
+		if len(self._tokens) > 0:
+			raise ParseException(token, self._tokens[0] + " expected.")
+		else:
+			raise ParseException(token)
+
+	def find(self, astree_list, token):
+		astree_list.append(ASTLeaf(token))
+
+	def match(self, lexer):
+		token = lexer.peek(0)
+		if token.is_identifier:
+			for _token in self._tokens:
+				if token.text == _token.text:
+					return True
+		return False
+
+
+class Skip(Leaf):
+	def find(self, astree_list, token):
+		pass
+
+
 class Parser(object):
     
-    
-
-    protected static class Leaf extends Element {
-        protected String[] tokens;
-        protected Leaf(String[] pat) { tokens = pat; }
-        protected void parse(Lexer lexer, List<ASTree> res)
-            throws ParseException
-        {
-            Token t = lexer.read();
-            if (t.isIdentifier())
-                for (String token: tokens)
-                    if (token.equals(t.getText())) {
-                        find(res, t);
-                        return;
-                    }
-
-            if (tokens.length > 0)
-                throw new ParseException(tokens[0] + " expected.", t);
-            else
-                throw new ParseException(t);
-        }
-        protected void find(List<ASTree> res, Token t) {
-            res.add(new ASTLeaf(t));
-        }
-        protected boolean match(Lexer lexer) throws ParseException {
-            Token t = lexer.peek(0);
-            if (t.isIdentifier())
-                for (String token: tokens)
-                    if (token.equals(t.getText()))
-                        return true;
-
-            return false;
-        }
-    }
-
-    protected static class Skip extends Leaf {
-        protected Skip(String[] t) { super(t); }
-        protected void find(List<ASTree> res, Token t) {}
-    }
 
     public static class Precedence {
         int value;

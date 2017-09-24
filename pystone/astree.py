@@ -35,7 +35,7 @@ class ASTLeaf(ASTree):
 		self._token = token
 
 	def __str__(self):
-		return token.text
+		return self._token.text
 
 	def location(self):
 		return 'at line ' + str(token.line_number)

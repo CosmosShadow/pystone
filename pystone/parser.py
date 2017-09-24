@@ -212,7 +212,8 @@ class Parser(object):
 		else:
 			return self._elements[0].match(lexer)
 
-	def rule(self, astree_class=None):
+	@staticmethod
+	def rule(astree_class=None):
 		return Parser(astree_class)
 
 	def reset(self):
@@ -231,20 +232,20 @@ class Parser(object):
 		self._elements.append(StrToken(astree_class))
 		return self
 
-	def token(self, token_text_arr):
-		self._elements.append(Leaf(token_text_arr))
+	def token(self, *token_text_arr):
+		self._elements.append(Leaf(list(token_text_arr)))
 		return self
 
-	def sep(self, token_text_arr):
-		self._elements.append(Skip(token_text_arr))
+	def sep(self, *token_text_arr):
+		self._elements.append(Skip(list(token_text_arr)))
 		return self
 
 	def ast(self, parser):
 		self._elements.append(Tree(parser))
 		return self
 
-	def or_(self, parser):
-		self._elements.append(OrTree([parser]))
+	def or_(self, *parser_arr):
+		self._elements.append(OrTree(list(parser_arr)))
 		return self
 
 	def maybe(self, parser):

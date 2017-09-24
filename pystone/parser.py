@@ -209,7 +209,9 @@ class Parser(object):
 		astree_list = []
 		for element in self._elements:
 			element.parse(lexer, astree_list)
-		if len(astree_list) == 1:
+		if len(astree_list) == 0:
+			return None
+		elif len(astree_list) == 1:
 			return astree_list[0]
 		else:
 			return self._astree_class(astree_list)

@@ -11,7 +11,7 @@ class TestLexer(object):
 		source_codes = ['hello world //comment']
 		lexer = Lexer(source_codes)
 		tokens = [lexer.read() for _ in range(4)]
-		for i, (cls, text) in enumerate([(IdToken, 'hello'), (IdToken, 'world'), (IdToken, '\\n')]):
+		for i, (cls, text) in enumerate([(IdToken, 'hello'), (IdToken, 'world'), (IdToken, '\n')]):
 			assert_is_instance(tokens[i], cls)
 			assert_equal(tokens[i].text, text)
 		assert_is_instance(tokens[-1], Token)
@@ -21,7 +21,7 @@ class TestLexer(object):
 		source_codes = ['a == "string"']
 		lexer = Lexer(source_codes)
 		tokens = [lexer.read() for _ in range(5)]
-		for i, (cls, text) in enumerate([(IdToken, 'a'), (IdToken, '=='), (StrToken, 'string'), (IdToken, '\\n')]):
+		for i, (cls, text) in enumerate([(IdToken, 'a'), (IdToken, '=='), (StrToken, 'string'), (IdToken, '\n')]):
 			assert_equal(tokens[i].text, text)
 			assert_is_instance(tokens[i], cls)
 		assert_is_instance(tokens[-1], Token)
@@ -43,7 +43,7 @@ class TestLexer(object):
 		assert_equal(tokens[2].number, 12)
 
 		assert_is_instance(tokens[3], IdToken)
-		assert_equal(tokens[3].text, '\\n')
+		assert_equal(tokens[3].text, '\n')
 
 		assert_is_instance(tokens[4], Token)
 		assert_equal(tokens[4].line_number, -1)

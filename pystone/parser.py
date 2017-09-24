@@ -6,12 +6,6 @@ from __future__ import division
 from .astree import ASTree, ASTLeaf, ASTList
 
 
-import java.util.HashMap;
-import java.util.HashSet;
-import java.lang.reflect.Method;
-import java.lang.reflect.Constructor;
-
-
 class ParseException(Exception):
 	def __init__(self, token, msg=''):
 		super(ParseException, self).__init__((token, msg))
@@ -117,17 +111,17 @@ class StrToken(AToken):
 
 
 class Leaf(Element):
-	def __init__(self, tokens):
-		self._tokens = tokens
+	def __init__(self, token_text_arr):
+		self._token_text_arr = token_text_arr
 
 	def parse(self, lexer, astree_list):
 		token = lexer.read()
 		if token.is_identifier:
-			for _token in self._tokens:
-				if token.text == _token.text:
+			for toke_text in self._token_text_arr:
+				if token.text == toke_text:
 					astree_list.append(ASTLeaf(token))
-		if len(self._tokens) > 0:
-			raise ParseException(token, self._tokens[0] + " expected.")
+		if len(self._token_text_arr) > 0:
+			raise ParseException(token, self._token_text_arr[0] + " expected.")
 		else:
 			raise ParseException(token)
 
@@ -136,11 +130,10 @@ class Leaf(Element):
 
 	def match(self, lexer):
 		token = lexer.peek(0)
-		if token.is_identifier:
-			for _token in self._tokens:
-				if token.text == _token.text:
-					return True
-		return False
+		if token.is_identifier and token.text in self._token_text_arr:
+			return True
+		else:
+			return False
 
 
 class Skip(Leaf):
@@ -155,6 +148,8 @@ class Operator(object):
 
 
 class Operators(object):
+	LEFT = True
+	RIGHT = False
 	def __init__(self):
 		self._operaters = {}
 
@@ -202,116 +197,91 @@ class Expr(Element):
 
 
 class Parser(object):
-	
-    protected List<Element> elements;
-    protected Factory factory;
-    public Parser(Class<? extends ASTree> clazz) {
-        reset(clazz);
-    }
-    protected Parser(Parser p) {
-        elements = p.elements;
-        factory = p.factory;
-    }
-    public ASTree parse(Lexer lexer) throws ParseException {
-        ArrayList<ASTree> results = new ArrayList<ASTree>();
-        for (Element e: elements)
-            e.parse(lexer, results);
+	def __init__(self, astree_class):
+		self._elements = []
+		self._astree_class = astree_class
 
-        return factory.make(results);
-    }
-    protected boolean match(Lexer lexer) throws ParseException {
-        if (elements.size() == 0)
-            return true;
-        else {
-            Element e = elements.get(0);
-            return e.match(lexer);
-        }
-    }
-    public static Parser rule() { return rule(null); }
-    public static Parser rule(Class<? extends ASTree> clazz) {
-        return new Parser(clazz);
-    }
-    public Parser reset() {
-        elements = new ArrayList<Element>();
-        return this;
-    }
-    public Parser reset(Class<? extends ASTree> clazz) {
-        elements = new ArrayList<Element>();
-        factory = Factory.getForASTList(clazz);
-        return this;
-    }
-    public Parser number() {
-        return number(null);
-    }
-    public Parser number(Class<? extends ASTLeaf> clazz) {
-        elements.add(new NumToken(clazz));
-        return this;
-    }
-    public Parser identifier(HashSet<String> reserved) {
-        return identifier(null, reserved);
-    }
-    public Parser identifier(Class<? extends ASTLeaf> clazz, HashSet<String> reserved)
-    {
-        elements.add(new IdToken(clazz, reserved));
-        return this;
-    }
-    public Parser string() {
-        return string(null);
-    }
-    public Parser string(Class<? extends ASTLeaf> clazz) {
-        elements.add(new StrToken(clazz));
-        return this;
-    }
-    public Parser token(String... pat) {
-        elements.add(new Leaf(pat));
-        return this;
-    }
-    public Parser sep(String... pat) {
-        elements.add(new Skip(pat));
-        return this;
-    }
-    public Parser ast(Parser p) {
-        elements.add(new Tree(p));
-        return this;
-    }
-    public Parser or(Parser... p) {
-        elements.add(new OrTree(p));
-        return this;
-    }
-    public Parser maybe(Parser p) {
-        Parser p2 = new Parser(p);
-        p2.reset();
-        elements.add(new OrTree(new Parser[] { p, p2 }));
-        return this;
-    }
-    public Parser option(Parser p) {
-        elements.add(new Repeat(p, true));
-        return this;
-    }
-    public Parser repeat(Parser p) {
-        elements.add(new Repeat(p, false));
-        return this;
-    }
-    public Parser expression(Parser subexp, Operators operators) {
-        elements.add(new Expr(null, subexp, operators));
-        return this;
-    }
-    public Parser expression(Class<? extends ASTree> clazz, Parser subexp, Operators operators) {
-        elements.add(new Expr(clazz, subexp, operators));
-        return this;
-    }
-    public Parser insertChoice(Parser p) {
-        Element e = elements.get(0);
-        if (e instanceof OrTree)
-            ((OrTree)e).insert(p);
-        else {
-            Parser otherwise = new Parser(this);
-            reset(null);
-            or(p, otherwise);
-        }
-        return this;
-    }
-}
+	def parse(self, lexer):
+		astree_list = []
+		for element in self._elements:
+			element.parse(lexer, astree_list)
+
+	def match(self, lexer):
+		if len(self._elements) == 0:
+			return True
+		else:
+			return self._elements[0].match(lexer)
+
+	def rule(self, astree_class=None):
+		return Parser(astree_class)
+
+	def reset(self):
+		self._elements = []
+		return self
+
+	def number(self, astree_class=None):
+		self._elements.append(NumToken(astree_class))
+		return self
+
+	def identifier(self, reserved_arr, astree_class=None):
+		self._elements.append(IdToken(astree_class, reserved_arr))
+		return self
+
+	def string(self, astree_class=None):
+		self._elements.append(StrToken(astree_class))
+		return self
+
+	def token(self, token_text_arr):
+		self._elements.append(Leaf(token_text_arr))
+		return self
+
+	def sep(self, token_text_arr):
+		self._elements.append(Skip(token_text_arr))
+		return self
+
+	def ast(self, parser):
+		self._elements.append(Tree(parser))
+		return self
+
+	def or_(self, parser):
+		self._elements.append(OrTree([parser]))
+		return self
+
+	def maybe(self, parser):
+		new_parser = copy.deepcopy(parser)
+		new_parser.reset()
+		self._elements.append(OrTree([parser, new_parser]))
+		return self
+
+	def option(self, parser):
+		self._elements.append(Repeat(parser, True))
+		return self
+
+	def repeat(self, parser):
+		self._elements.append(Repeat(parser, False))
+		return self
+
+	def expression(self, subexp_parser, operators):
+		self._elements.append(Expr(subexp_parser, operators))
+		return self
+
+	def insert_choice(self, parser):
+		element = self._elements[0]
+		if isinstance(element, OrTree):
+			element.insert(parser)
+		else:
+			other_parser = copy.deepcopy(self)
+			self.reset()
+			self.or_(parser, other_parser)
+		return self
+
+
+
+
+
+
+
+
 
 
 

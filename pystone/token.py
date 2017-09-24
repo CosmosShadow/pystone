@@ -38,7 +38,7 @@ class Token(object):
 		return ""
 
 	def __str__(self):
-		return self.text
+		return 'line %d: %s' % (self._line_number, self.text)
 
 
 # end of file

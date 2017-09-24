@@ -21,6 +21,15 @@ even + odd"""
 
 code_arr = codes.split('\n')
 
-lexer = Lexer(codes)
+lexer = Lexer(code_arr)
 parser = BasicParser()
-parser.parse(lexer)
+
+# token = lexer.read()
+# while token != Token.EOF:
+# 	print(token)
+# 	token = lexer.read()
+# exit()
+
+while lexer.peek(0) != Token.EOF:
+	ast = parser.parse(lexer)
+	print('==> ', ast)

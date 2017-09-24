@@ -8,7 +8,7 @@ from .astree import ASTree, ASTLeaf, ASTList
 
 class ParseException(Exception):
 	def __init__(self, token, msg=''):
-		super(ParseException, self).__init__((token, msg))
+		super(ParseException, self).__init__((str(token), msg))
 
 
 class Element(object):
@@ -64,7 +64,7 @@ class Repeat(Element):
 	def parse(self, lexer, astree_list):
 		while self._parser.match(lexer):
 			astree = self._parser.parse(lexer, astree_list)
-			if isinstance(astree, ASTList) or astree.child_count > 0:
+			if isinstance(astree, ASTList) or len(astree) > 0:
 				astree_list.append(astree)
 			if self._only_once:
 				break
@@ -119,7 +119,8 @@ class Leaf(Element):
 		if token.is_identifier:
 			for toke_text in self._token_text_arr:
 				if token.text == toke_text:
-					astree_list.append(ASTLeaf(token))
+					self.find(astree_list, token)
+					return
 		if len(self._token_text_arr) > 0:
 			raise ParseException(token, self._token_text_arr[0] + " expected.")
 		else:
@@ -157,7 +158,7 @@ class Operators(object):
 		self._operaters[name] = Operator(value, leftAssoc)
 
 	def __getitem__(self, key):
-		return self._operaters[key]
+		return self._operaters.get(key, None)
 
 
 class Expr(Element):
@@ -201,10 +202,11 @@ class Parser(object):
 		self._elements = []
 		self._astree_class = astree_class
 
-	def parse(self, lexer):
-		astree_list = []
+	def parse(self, lexer, astree_list=None):
+		astree_list = astree_list or []
 		for element in self._elements:
 			element.parse(lexer, astree_list)
+		return astree_list
 
 	def match(self, lexer):
 		if len(self._elements) == 0:

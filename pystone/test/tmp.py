@@ -34,7 +34,12 @@ def flat(arr):
 	result = []
 	for item in arr:
 		if isinstance(item, list):
-			result += item
+			if len(item) > 1:
+				result.append('(')
+				result += item
+				result.append(')')
+			else:
+				result += item
 		else:
 			result.append(item)
 	return result
@@ -46,9 +51,9 @@ def flat_all(arr):
 
 def print_astree_list(astree_list):
 	flatten = flat_all(astree_list)
-	print('==> ' + ''.join(map(str, flatten)))
+	print('==> ' + ' '.join(map(str, flatten)))
 
 while lexer.peek(0) != Token.EOF:
 	astree_list = parser.parse(lexer)
-	# print_astree_list(astree_list)
-	print('==>', astree_list)
+	print_astree_list(astree_list)
+	# print('==>', astree_list)

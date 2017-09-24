@@ -63,7 +63,7 @@ class Repeat(Element):
 
 	def parse(self, lexer, astree_list):
 		while self._parser.match(lexer):
-			astree = self._parser.parse(lexer, astree_list)
+			astree = self._parser.parse(lexer)
 			if isinstance(astree, ASTList) or len(astree) > 0:
 				astree_list.append(astree)
 			if self._only_once:
@@ -202,8 +202,8 @@ class Parser(object):
 		self._elements = []
 		self._astree_class = astree_class
 
-	def parse(self, lexer, astree_list=None):
-		astree_list = astree_list or []
+	def parse(self, lexer):
+		astree_list = []
 		for element in self._elements:
 			element.parse(lexer, astree_list)
 		return astree_list

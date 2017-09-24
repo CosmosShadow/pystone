@@ -61,9 +61,9 @@ class Repeat(Element):
 		self._parser = parser
 		self._only_once = only_once
 
-	def parse(lexer, astree_list):
+	def parse(self, lexer, astree_list):
 		while self._parser.match(lexer):
-			astree = self._parser.parse(lexer)
+			astree = self._parser.parse(lexer, astree_list)
 			if isinstance(astree, ASTList) or astree.child_count > 0:
 				astree_list.append(astree)
 			if self._only_once:
@@ -77,7 +77,7 @@ class AToken(Element):
 	def __init__(self, astree_class=None):
 		self._astree_class = astree_class or ASTLeaf
 
-	def parse(lexer, astree_list):
+	def parse(self, lexer, astree_list):
 		token = lexer.read()
 		if self.test(token):
 			leaf = self._astree_class(token)
@@ -98,7 +98,7 @@ class IdToken(AToken):
 		self._reserved_arr = reserved_arr or []		#保留字数组
 
 	def test(self, token):
-		return token.is_identifier and t.text not in self._reserved_arr
+		return token.is_identifier and token.text not in self._reserved_arr
 
 
 class NumToken(AToken):
@@ -161,11 +161,11 @@ class Operators(object):
 
 
 class Expr(Element):
-	def __init__(self, factor, operators):
+	def __init__(self, astree_class, factor, operators):
 		self._factor = factor
 		self._operaters = operators
 
-	def parse(lexer, astree_list):
+	def parse(self, lexer, astree_list):
 		astree_right = self._factor.parse(lexer)
 		operator_next = self.next_operator(lexer)	#Precedence
 		while operator_next is not None:
@@ -185,7 +185,7 @@ class Expr(Element):
 		token = lexer.peek(0)
 		return self._operaters[token.text] if token.is_identifier else None
 
-	def right_is_expr(operator_value, operator_next):
+	def right_is_expr(self, operator_value, operator_next):
 		if operator_next.left_assoc:
 			return operator_value < operator_next.value
 		else:
@@ -224,7 +224,7 @@ class Parser(object):
 		self._elements.append(NumToken(astree_class))
 		return self
 
-	def identifier(self, reserved_arr, astree_class=None):
+	def identifier(self, astree_class=None, reserved_arr=None):
 		self._elements.append(IdToken(astree_class, reserved_arr))
 		return self
 
@@ -262,8 +262,8 @@ class Parser(object):
 		self._elements.append(Repeat(parser, False))
 		return self
 
-	def expression(self, subexp_parser, operators):
-		self._elements.append(Expr(subexp_parser, operators))
+	def expression(self, astree_class, subexp_parser, operators):
+		self._elements.append(Expr(astree_class, subexp_parser, operators))
 		return self
 
 	def insert_choice(self, parser):

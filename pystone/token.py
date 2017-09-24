@@ -44,7 +44,7 @@ class Token(object):
 # end of file
 Token.EOF = Token(-1)
 # end of line
-Token.EOL = '\\n'
+Token.EOL = '\n'
 
 class NumToken(Token):
 	"""整型字面量"""

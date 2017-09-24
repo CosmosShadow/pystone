@@ -16,6 +16,54 @@ class PrimaryExpr(ASTList):
 			return PrimaryExpr(astree_list)
 
 
+
+class NegativeExpr(ASTList):
+	def operand(self):
+		return self.child(0)
+
+	def __str__(self):
+		return '-' + self.operand()
+
+
+class BlockStmnt(ASTList):
+	pass
+
+
+class IfStmnt(ASTList):
+	def condition(self):
+		return self.child(0)
+
+	def then_block(self):
+		return child(1)
+
+	def else_block(self):
+		return self.child(2) if self.child_count > 2 else None
+
+	def __str__(self):
+		else_block_str = self.else_block() or 'None'
+		return "(if " + self.condition() + " " + self.then_block() + " else " + else_block_str + ")"
+
+
+class WhileStmnt(ASTList):
+	def condition(self):
+		return self.child(0)
+
+	def body(self):
+		return self.child(1)
+
+	def __str__(self):
+		return "(while " + self.condition() + " " + body() + ")"
+
+
+class NullStmnt(ASTList):
+	pass
+
+
+class StringLiteral(ASTLeaf):
+	def value(self):
+		return self.token().text
+
+
 class BasicParser(object):
 	def __init__(self, arg):
 		super(BasicParser, self).__init__()

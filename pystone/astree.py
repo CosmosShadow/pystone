@@ -111,14 +111,14 @@ class IfStmnt(ASTList):
 		return self.child(0)
 
 	def then_block(self):
-		return child(1)
+		return self.child(1)
 
 	def else_block(self):
 		return self.child(2) if self.child_count > 2 else None
 
 	def __str__(self):
-		else_block_str = self.else_block() or 'None'
-		return "(if " + self.condition() + " " + self.then_block() + " else " + else_block_str + ")"
+		else_block_str = str(self.else_block()) or 'None'
+		return "(if " + str(self.condition()) + " " + str(self.then_block()) + " else " + else_block_str + ")"
 
 
 class WhileStmnt(ASTList):
@@ -129,7 +129,7 @@ class WhileStmnt(ASTList):
 		return self.child(1)
 
 	def __str__(self):
-		return "(while " + self.condition() + " " + body() + ")"
+		return "(while " + str(self.condition()) + " " + str(self.body()) + ")"
 
 
 class NullStmnt(ASTList):

@@ -180,7 +180,7 @@ class Expr(Element):
 		astree_right = self._factor.parse(lexer)
 		operator_next = self.next_operator(lexer)	#Precedence
 		while operator_next is not None and self.right_is_expr(operator_value, operator_next):
-			astree_right = do_shift(lexer, astree_right, operator_next.value);
+			astree_right = self.do_shift(lexer, astree_right, operator_next.value);
 			operator_next = self.next_operator(lexer)
 		arr.append(astree_right)
 		return self._astree_class(arr)
@@ -203,13 +203,16 @@ class Expr(Element):
 class Parser(object):
 	def __init__(self, astree_class):
 		self._elements = []
-		self._astree_class = astree_class
+		self._astree_class = astree_class or ASTList
 
 	def parse(self, lexer):
 		astree_list = []
 		for element in self._elements:
 			element.parse(lexer, astree_list)
-		return self._astree_class(astree_list)
+		if len(astree_list) == 1:
+			return astree_list[0]
+		else:
+			return self._astree_class(astree_list)
 
 	def match(self, lexer):
 		if len(self._elements) == 0:

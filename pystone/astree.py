@@ -56,7 +56,7 @@ class ASTList(ASTree):
 
 	def location(self):
 		for t in self._children:
-			if t.location():
+			if t.location() is not None:
 				return t.location()
 		return None
 
@@ -79,7 +79,7 @@ class BinaryExpr(ASTList):
 		return self.child(0)
 
 	def operator(self):
-		return self.child(0).token().text
+		return self.child(1).token().text
 
 	def right(self):
 		return self.child(2)
@@ -99,7 +99,7 @@ class NegativeExpr(ASTList):
 		return self.child(0)
 
 	def __str__(self):
-		return '-' + self.operand()
+		return '-' + str(self.operand())
 
 
 class BlockStmnt(ASTList):

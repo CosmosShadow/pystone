@@ -7,6 +7,18 @@ from .astree import *
 from .token import *
 
 
+# 语法规则
+# primary    : "(" expr ")" | NUMBER | IDENTIFIER | STRING
+# factor     : "-" primary | primary
+# expr       : factor { OP factor }
+# block      : "{" [ statement ] {(";" | EOL) [ statement ]} "}"
+# simple     : expr
+# statement  : "if" expr block [ "else" block ]
+#            | "while" expr block
+#            | simple
+# program    : [ statement ] (";" | EOL)
+
+
 class BasicParser(object):
 	def __init__(self):
 		super(BasicParser, self).__init__()

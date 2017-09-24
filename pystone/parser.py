@@ -105,6 +105,7 @@ class NumToken(AToken):
 	def test(self, token):
 		return token.is_number
 
+
 class StrToken(AToken):
 	def test(self, token):
 		return token.is_string
@@ -265,11 +266,11 @@ class Parser(object):
 		return self
 
 	def option(self, parser):
-		self._elements.append(Repeat(parser, True))
+		self._elements.append(Repeat(parser, only_once=True))
 		return self
 
 	def repeat(self, parser):
-		self._elements.append(Repeat(parser, False))
+		self._elements.append(Repeat(parser, only_once=False))
 		return self
 
 	def expression(self, astree_class, subexp_parser, operators):

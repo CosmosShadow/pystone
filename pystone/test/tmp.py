@@ -28,26 +28,6 @@ parser = BasicParser()
 # while token != Token.EOF:
 # 	print(token)
 # 	token = lexer.read()
-# exit()
-
-def flat(arr):
-	result = []
-	for item in arr:
-		if isinstance(item, list):
-			if len(item) > 1:
-				result.append('(')
-				result += item
-				result.append(')')
-			else:
-				result += item
-		else:
-			result.append(item)
-	return result
-
-def flat_all(arr):
-	while any([isinstance(item, list) for item in arr]):
-		arr = flat(arr)
-	return arr
 
 def print_astree_list(astree_list):
 	flatten = flat_all(astree_list)
@@ -55,5 +35,5 @@ def print_astree_list(astree_list):
 
 while lexer.peek(0) != Token.EOF:
 	astree_list = parser.parse(lexer)
-	print_astree_list(astree_list)
-	# print('==>', astree_list)
+	# print_astree_list(astree_list)
+	print('==>', astree_list)

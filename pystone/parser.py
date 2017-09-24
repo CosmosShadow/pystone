@@ -64,7 +64,7 @@ class Repeat(Element):
 	def parse(self, lexer, astree_list):
 		while self._parser.match(lexer):
 			astree = self._parser.parse(lexer)
-			if isinstance(astree, ASTList) or len(astree) > 0:
+			if isinstance(astree, ASTList) or (isinstance(astree, list) and len(astree) > 0):
 				astree_list.append(astree)
 			if self._only_once:
 				break
@@ -163,6 +163,7 @@ class Operators(object):
 
 class Expr(Element):
 	def __init__(self, astree_class, factor, operators):
+		self._astree_class = astree_class
 		self._factor = factor
 		self._operaters = operators
 
@@ -175,12 +176,14 @@ class Expr(Element):
 		astree_list.append(astree_right)
 
 	def do_shift(self, lexer, astree_left, operator_value):
+		arr = [astree_left, ASTLeaf(lexer.read())]
 		astree_right = self._factor.parse(lexer)
 		operator_next = self.next_operator(lexer)	#Precedence
 		while operator_next is not None and self.right_is_expr(operator_value, operator_next):
 			astree_right = do_shift(lexer, astree_right, operator_next.value);
 			operator_next = self.next_operator(lexer)
-		return [astree_left, ASTLeaf(lexer.read()), astree_right]
+		arr.append(astree_right)
+		return self._astree_class(arr)
 
 	def next_operator(self, lexer):
 		token = lexer.peek(0)
@@ -206,7 +209,7 @@ class Parser(object):
 		astree_list = []
 		for element in self._elements:
 			element.parse(lexer, astree_list)
-		return astree_list
+		return self._astree_class(astree_list)
 
 	def match(self, lexer):
 		if len(self._elements) == 0:

@@ -82,6 +82,15 @@ class Lexer(object):
 			self._queue.append(token)
 
 
+def tokenize(code):
+	code_arr = code.split('\n')
+	lexer = Lexer(code_arr)
+	tokens = []
+	while lexer.peek(0) != Token.EOF:
+		tokens.append(lexer.read())
+	tokens.append(Token.EOF)
+	return tokens
+
 
 class ParseException(Exception):
 	def __init__(self, msg, token=None):

@@ -49,6 +49,20 @@ class TestLexer(object):
 		assert_equal(tokens[4].line_number, -1)
 
 
+	def test_tokenize(self):
+		tokens = tokenize('1+-2')
+		assert_equal(len(tokens), 6)
+		for i, text in enumerate(['1', '+', '-', '2', '\n']):
+			assert_equal(tokens[i].text, text)
+		assert_equal(tokens[-1].line_number, -1)
+
+if __name__ == '__main__':
+	for token in tokenize('1+-2'):
+		print(token)
+
+
+
+
 
 
 

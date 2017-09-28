@@ -147,6 +147,10 @@ class Skip(Leaf):
 
 
 class Operator(object):
+	"""操作符
+	value: 优先级
+	left_assoc: 同优先级时，是否左优先
+	"""
 	def __init__(self, value, left_assoc):
 		self.value = value
 		self.left_assoc = left_assoc
@@ -158,30 +162,37 @@ class Operators(object):
 	def __init__(self):
 		self._operaters = {}
 
-	def add(self, name, value, leftAssoc):
-		self._operaters[name] = Operator(value, leftAssoc)
+	def add(self, name, value, left_assoc):
+		"""
+		name: 关键字
+		value: 优先级
+		left_assoc: 同优先级时，左优先
+		"""
+		self._operaters[name] = Operator(value, left_assoc)
 
 	def __getitem__(self, key):
 		return self._operaters.get(key, None)
 
 
 class Expr(Element):
-	def __init__(self, astree_class, factor, operators):
+	"""递归二元表达式"""
+	def __init__(self, astree_class, parser, operators):
+		super(Expr, self).__init__()
 		self._astree_class = astree_class
-		self._factor = factor
+		self._parser = parser
 		self._operaters = operators
 
 	def parse(self, lexer, astree_list):
-		astree_right = self._factor.parse(lexer)
+		astree_left = self._parser.parse(lexer)
 		operator_next = self.next_operator(lexer)	#Precedence
 		while operator_next is not None:
-			astree_right = self.do_shift(lexer, astree_right, operator_next.value)
+			astree_left = self.do_shift(lexer, astree_left, operator_next.value)
 			operator_next = self.next_operator(lexer)
-		astree_list.append(astree_right)
+		astree_list.append(astree_left)
 
 	def do_shift(self, lexer, astree_left, operator_value):
 		arr = [astree_left, ASTLeaf(lexer.read())]
-		astree_right = self._factor.parse(lexer)
+		astree_right = self._parser.parse(lexer)
 		operator_next = self.next_operator(lexer)	#Precedence
 		while operator_next is not None and self.right_is_expr(operator_value, operator_next):
 			astree_right = self.do_shift(lexer, astree_right, operator_next.value)
@@ -200,8 +211,7 @@ class Expr(Element):
 			return operator_value <= operator_next.value
 
 	def match(self, lexer):
-		return self._factor.match(lexer)
-
+		return self._parser.match(lexer)
 
 
 class Parser(object):

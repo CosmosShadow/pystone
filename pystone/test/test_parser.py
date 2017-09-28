@@ -43,3 +43,30 @@ class TestParser(object):
 		for tree, target in zip(tree_arr, syntax_tree.split('\n')):
 			assert_equal(str(tree), target.strip())
 
+
+if __name__ == '__main__':
+	code_arr = ['2 + -1']
+	lexer = Lexer(code_arr)
+	basic_parser = BasicParser()
+	print(basic_parser.parse(lexer))
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

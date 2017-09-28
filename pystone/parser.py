@@ -37,16 +37,16 @@ class OrTree(Element):
 		self._parsers = parsers
 
 	def parse(self, lexer, astree_list):
-		p = self.choose(lexer);
+		p = self._choose(lexer)
 		if p is None:
 			raise ParseException(lexer.peek(0))
 		else:
 			astree_list.append(p.parse(lexer))
 
 	def match(self, lexer):
-		return self.choose(lexer) is not None
+		return self._choose(lexer) is not None
 
-	def choose(self, lexer):
+	def _choose(self, lexer):
 		for parser in self._parsers:
 			if parser.match(lexer):
 				return parser
@@ -98,7 +98,10 @@ class IdToken(AToken):
 		self._reserved_arr = reserved_arr or []		#保留字数组
 
 	def test(self, token):
-		return token.is_identifier and token.text not in self._reserved_arr
+		if token.is_identifier and token.text not in self._reserved_arr:
+			return True
+		else:
+			return False
 
 
 class NumToken(AToken):
@@ -120,14 +123,14 @@ class Leaf(Element):
 		if token.is_identifier:
 			for toke_text in self._token_text_arr:
 				if token.text == toke_text:
-					self.find(astree_list, token)
+					self.add_token(astree_list, token)
 					return
 		if len(self._token_text_arr) > 0:
-			raise ParseException(token, self._token_text_arr[0] + " expected.")
+			raise ParseException(token, 'one of [' + ' '.join(self._token_text_arr) + "] expected.")
 		else:
 			raise ParseException(token)
 
-	def find(self, astree_list, token):
+	def add_token(self, astree_list, token):
 		astree_list.append(ASTLeaf(token))
 
 	def match(self, lexer):
@@ -139,7 +142,7 @@ class Leaf(Element):
 
 
 class Skip(Leaf):
-	def find(self, astree_list, token):
+	def add_token(self, astree_list, token):
 		pass
 
 
@@ -181,7 +184,7 @@ class Expr(Element):
 		astree_right = self._factor.parse(lexer)
 		operator_next = self.next_operator(lexer)	#Precedence
 		while operator_next is not None and self.right_is_expr(operator_value, operator_next):
-			astree_right = self.do_shift(lexer, astree_right, operator_next.value);
+			astree_right = self.do_shift(lexer, astree_right, operator_next.value)
 			operator_next = self.next_operator(lexer)
 		arr.append(astree_right)
 		return self._astree_class(arr)

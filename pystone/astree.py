@@ -44,7 +44,6 @@ class ASTLeaf(ASTree):
 		return self._token
 
 
-
 class ASTList(ASTree):
 	"""抽象语法树列表: 就是中间结节"""
 	def __init__(self, children):
@@ -139,6 +138,13 @@ class NullStmnt(ASTList):
 class StringLiteral(ASTLeaf):
 	def value(self):
 		return self.token().text
+
+
+
+
+
+
+
 
 
 

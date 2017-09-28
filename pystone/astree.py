@@ -51,12 +51,13 @@ class ASTList(ASTree):
 		self._children = children
 
 	def __str__(self):
-		return '(' + ' '.join([str(t) for t in self._children]) +  ')'
+		return '(' + ' '.join(map(str, self._children)) +  ')'
 
 	def location(self):
 		for t in self._children:
-			if t.location() is not None:
-				return t.location()
+			loc = t.location()
+			if loc is not None:
+				return loc
 		return None
 
 
@@ -72,6 +73,23 @@ class Name(ASTLeaf):
 		return self._token.text
 
 
+class StringLiteral(ASTLeaf):
+	def value(self):
+		return self.token().text
+
+
+class PrimaryExpr(ASTList):
+	pass
+
+
+class NegativeExpr(ASTList):
+	def operand(self):
+		return self.child(0)
+
+	def __str__(self):
+		return '-' + str(self.operand())
+
+
 class BinaryExpr(ASTList):
 	"""二元表达式"""
 	def left(self):
@@ -82,23 +100,6 @@ class BinaryExpr(ASTList):
 
 	def right(self):
 		return self.child(2)
-
-
-class PrimaryExpr(ASTList):
-	@staticmethod
-	def create(self, astree_list):
-		if len(astree_list) == 1:
-			return astree_list[0]
-		else:
-			return PrimaryExpr(astree_list)
-
-
-class NegativeExpr(ASTList):
-	def operand(self):
-		return self.child(0)
-
-	def __str__(self):
-		return '-' + str(self.operand())
 
 
 class BlockStmnt(ASTList):
@@ -135,9 +136,7 @@ class NullStmnt(ASTList):
 	pass
 
 
-class StringLiteral(ASTLeaf):
-	def value(self):
-		return self.token().text
+
 
 
 

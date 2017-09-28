@@ -8,7 +8,7 @@ from .token import *
 
 
 # 语法规则
-# primary    : "(" expr ")" | NUMBER | IDENTIFIER | STRING
+# primary    : "(" expr ")" | NUMBER | NAME | STRING
 # factor     : "-" primary | primary
 # expr       : factor { OP factor }
 # block      : "{" [ statement ] {(";" | EOL) [ statement ]} "}"
@@ -62,3 +62,18 @@ class BasicParser(object):
 
 	def parse(self, lexer):
 		return self._program.parse(lexer)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

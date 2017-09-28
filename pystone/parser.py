@@ -226,7 +226,8 @@ class Parser(object):
 		if len(astree_list) == 0:
 			return None
 		elif len(astree_list) == 1:
-			return astree_list[0]
+			return self._astree_class(astree_list)
+			# return astree_list[0]
 		else:
 			return self._astree_class(astree_list)
 

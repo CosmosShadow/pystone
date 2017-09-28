@@ -45,10 +45,13 @@ class TestParser(object):
 
 
 if __name__ == '__main__':
-	code_arr = ['2 + -1']
+	code_arr = ['-1']
 	lexer = Lexer(code_arr)
 	basic_parser = BasicParser()
-	print(basic_parser.parse(lexer))
+	tree = basic_parser.parse(lexer)
+	print(tree)
+	print(type(tree))
+	print(dir(tree))
 
 
 

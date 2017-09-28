@@ -57,7 +57,7 @@ class TestLexer(object):
 		assert_equal(tokens[-1].line_number, -1)
 
 if __name__ == '__main__':
-	for token in tokenize('1+-2'):
+	for token in tokenize('2 + -1'):
 		print(token)
 
 

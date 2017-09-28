@@ -43,7 +43,7 @@ class TestIdToken(object):
 	def setup(self):
 		self._token = IdToken(1, 'hello')
 
-	def test_number(self):
+	def test_id(self):
 		assert_equal(self._token.line_number, 1)
 		assert_false(self._token.is_number)
 		assert_true(self._token.is_identifier)
@@ -59,7 +59,7 @@ class TestStrToken(object):
 	def setup(self):
 		self._token = StrToken(1, 'hello')
 
-	def test_number(self):
+	def test_str(self):
 		assert_equal(self._token.line_number, 1)
 		assert_false(self._token.is_number)
 		assert_false(self._token.is_identifier)

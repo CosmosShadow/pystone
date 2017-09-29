@@ -5,7 +5,7 @@ from __future__ import division
 from .parser import Parser, Operators
 from .astree import *
 from .token import *
-
+from .lexer import Lexer
 
 # 语法规则
 # primary    : "(" expr ")" | NUMBER | NAME | STRING
@@ -64,7 +64,19 @@ class BasicParser(object):
 		return self._program.parse(lexer)
 
 
+def parse_lexer(lexer):
+	basic_parser = BasicParser()
+	tree_arr = []
+	while lexer.peek(0) != Token.EOF:
+		tree = basic_parser.parse(lexer)
+		tree_arr.append(tree)
+	return tree_arr
 
+
+def parse_code(code):
+	code_arr = code.split('\n')
+	lexer = Lexer(code_arr)
+	return parse_lexer(lexer)
 
 
 

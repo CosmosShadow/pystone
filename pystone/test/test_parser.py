@@ -9,7 +9,6 @@ from pystone.basic_parser import *
 
 
 
-
 class TestParser(object):
 	def test_parser(self):
 		codes = """even = 0
@@ -44,14 +43,15 @@ class TestParser(object):
 			assert_equal(str(tree), target.strip())
 
 
+	def test_parse_negative(self):
+		trees = parse_code('2+-1')
+		assert_equal(len(trees), 1)
+		assert_equal(str(trees[0]), '(2 + (-1))')
+
+
 if __name__ == '__main__':
-	code_arr = ['-1']
-	lexer = Lexer(code_arr)
-	basic_parser = BasicParser()
-	tree = basic_parser.parse(lexer)
-	print(tree)
-	print(type(tree))
-	print(dir(tree))
+	trees = parse_code('2+-1')
+	print(trees[0])
 
 
 

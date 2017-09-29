@@ -3,8 +3,7 @@
 from __future__ import absolute_import
 from __future__ import print_function
 from __future__ import division
-from .astree import ASTree, ASTLeaf, ASTList
-
+from .astree import ASTree, ASTLeaf, ASTList, NegativeExpr
 
 class ParseException(Exception):
 	def __init__(self, token, msg=''):
@@ -225,9 +224,8 @@ class Parser(object):
 			element.parse(lexer, astree_list)
 		if len(astree_list) == 0:
 			return None
-		elif len(astree_list) == 1:
-			return self._astree_class(astree_list)
-			# return astree_list[0]
+		elif len(astree_list) == 1 and self._astree_class != NegativeExpr:
+			return astree_list[0]
 		else:
 			return self._astree_class(astree_list)
 
@@ -300,8 +298,6 @@ class Parser(object):
 			self.reset()
 			self.or_(parser, other_parser)
 		return self
-
-
 
 
 

@@ -87,7 +87,7 @@ class NegativeExpr(ASTList):
 		return self.child(0)
 
 	def __str__(self):
-		return '-' + str(self.operand())
+		return '(-' + str(self.operand()) + ')'
 
 
 class BinaryExpr(ASTList):

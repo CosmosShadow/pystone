@@ -233,7 +233,7 @@ class Parser(object):
 		if len(self._elements) == 0:
 			return True
 		else:
-			return self._elements[0].match(lexer)
+			return self._elements[0].match(lexer)		#是否应该所有elements都match？
 
 	@staticmethod
 	def rule(astree_class=None):

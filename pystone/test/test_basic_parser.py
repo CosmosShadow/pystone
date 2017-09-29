@@ -9,7 +9,7 @@ from pystone.basic_parser import *
 
 
 
-class TestParser(object):
+class TestBasicParser(object):
 	def test_parser(self):
 		codes = """even = 0
 		odd = 0

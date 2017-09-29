@@ -35,9 +35,29 @@ class TestParser(object):
 		tree = repeat_num.parse(lexer)
 		assert_equal(str(tree), '(1 2 3)')
 
+	def test_parse_sep(self):
+		rule = Parser.rule
+		num = rule().number(NumberLiteral)
+		num_sep = rule().repeat(rule().sep(';', Token.EOL).option(num))
+		lexer = Lexer([';1;2;3'])
+		tree = num_sep.parse(lexer)
+		assert_equal(str(tree), '(1 2 3)')
+
+	def test_parse_option(self):
+		rule = Parser.rule
+		num = rule().number(NumberLiteral)
+		num_sep = rule().option(num).repeat(rule().sep(';', Token.EOL).option(num))
+		lexer = Lexer([';2;3'])
+		tree = num_sep.parse(lexer)
+		assert_equal(str(tree), '(2 3)')
+
 
 if __name__ == '__main__':
-	pass
+	rule = Parser.rule
+	num = rule().number(NumberLiteral)
+	num_sep = rule().option(num).repeat(rule().sep(';', Token.EOL).option(num))
+	lexer = Lexer([';2;3'])
+	print(num_sep.match(lexer))
 
 
 

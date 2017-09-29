@@ -41,8 +41,13 @@ class TestBasicParser(object):
 		assert_equal(str(trees[0]), '(2 + (-1))')
 
 
+	def test_parse_null(self):
+		trees = parse_code('\n')
+		assert_equal(trees[0], None)
+
+
 if __name__ == '__main__':
-	trees = parse_code('2+-1')
+	trees = parse_code('\n')
 	print(trees[0])
 
 

@@ -106,43 +106,53 @@ def compute_number(self, left_value, op, right_value):
 		EvalException('bad operator ' + str(self))
 
 
+@register(BlockStmnt)
+def eval(self, env):
+	result = 0
+	for sub_astree in self:
+		if not isinstance(sub_astree, NullStmnt):
+			result = sub_astree.eval(env)
+	return result
 
-    @Reviser public static class BlockEx extends BlockStmnt {
-        public BlockEx(List<ASTree> c) { super(c); }
-        public Object eval(Environment env) {
-            Object result = 0;
-            for (ASTree t: this) {
-                if (!(t instanceof NullStmnt))
-                    result = ((ASTreeEx)t).eval(env);
-            }
-            return result;
-        }
-    }
-    @Reviser public static class IfEx extends IfStmnt {
-        public IfEx(List<ASTree> c) { super(c); }
-        public Object eval(Environment env) {
-            Object c = ((ASTreeEx)condition()).eval(env);
-            if (c instanceof Integer && ((Integer)c).intValue() != FALSE)
-                return ((ASTreeEx)thenBlock()).eval(env);
-            else {
-                ASTree b = elseBlock();
-                if (b == null)
-                    return 0;
-            else
-                return ((ASTreeEx)b).eval(env);
-            }
-        }
-    }
-    @Reviser public static class WhileEx extends WhileStmnt {
-        public WhileEx(List<ASTree> c) { super(c); }
-        public Object eval(Environment env) {
-            Object result = 0;
-            for (;;) {
-                Object c = ((ASTreeEx)condition()).eval(env);
-                if (c instanceof Integer && ((Integer)c).intValue() == FALSE)
-                    return result;
-                else
-                    result = ((ASTreeEx)body()).eval(env);
-            }
-        }
-    }
+
+@register(IfStmnt)
+def eval(self, env):
+	cond = self.condition().eval(env)
+	if isinstance(cond, int) and cond != FALSE:
+		return self.then_block().eval(env)
+	else:
+		else_block = self.else_block()
+		if else_block is not None:
+			return else_block.eval(env)
+		else:
+			return 0
+
+
+@register(WhileStmnt)
+def eval(self, env):
+	result = 0
+	while True:
+		cond = self.condition().eval(env)
+		if isinstance(cond, int) and cond == FALSE:
+			return result
+		else:
+			result = self.body().eval(env)
+	return result
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

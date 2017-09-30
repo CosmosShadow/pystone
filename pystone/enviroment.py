@@ -15,7 +15,9 @@ class Enviroment(object):
 	def _check_key(self, key):
 		assert key != None
 		if not isinstance(key, str):
-			assert isinstance(key, IdToken)
+			assert isinstance(key, Token)
+			if not isinstance(key, IdToken):
+				raise StoneException('only variable can store a value')
 			key = key.text
 		assert len(key) > 0
 		return key

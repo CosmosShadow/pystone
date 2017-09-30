@@ -39,14 +39,22 @@ class TestEnviroment(object):
 		assert_equal(self._env[token_key], num_value)
 
 
+	@raises(StoneException)
+	def test_not_in(self):
+		self._env['not_in_key']
+
 	@raises(AssertionError)
 	def test_none_key(self):
 		self._env[None]
 
+	@raises(StoneException)
+	def test_wrong_token_value(self):
+		self._env['key'] = IdToken(1, 'id')
 
 	@raises(StoneException)
-	def test_none_key(self):
-		self._env['key'] = IdToken(1, 'id')
+	def test_wrong_token_key(self):
+		token_num = NumToken(1, 1)
+		self._env[token_num]
 
 
 if __name__ == '__main__':

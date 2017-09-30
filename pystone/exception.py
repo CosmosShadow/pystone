@@ -8,6 +8,10 @@ class StoneException(Exception):
 	pass
 
 
-class ParseException(Exception):
+class ParseException(StoneException):
 	def __init__(self, token, msg=''):
 		super(ParseException, self).__init__((str(token), msg))
+
+
+class EvalException(StoneException):
+	pass

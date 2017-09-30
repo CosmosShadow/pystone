@@ -11,47 +11,50 @@ FALSE = 0
 
 
 @register(ASTree)
-def eval(self):
+def eval(self, env):
 	raise NotImplementedError('')
 
 
 @register(ASTList)
-def eval(self):
-	 throw StoneException("cannot eval: " + toString(), this);
+def eval(self, env):
+	return EvalException("cannot eval: " + str(self))
 
-    @Reviser public static abstract class ASTreeEx extends ASTree {
-        public abstract Object eval(Environment env);
-    }
-    @Reviser public static class ASTListEx extends ASTList {
-        public ASTListEx(List<ASTree> c) { super(c); }
-        public Object eval(Environment env) {
-            throw new StoneException("cannot eval: " + toString(), this);
-        }
-    }
-    @Reviser public static class ASTLeafEx extends ASTLeaf {
-        public ASTLeafEx(Token t) { super(t); }
-        public Object eval(Environment env) {
-            throw new StoneException("cannot eval: " + toString(), this);
-        }
-    }
-    @Reviser public static class NumberEx extends NumberLiteral {
-        public NumberEx(Token t) { super(t); }
-        public Object eval(Environment e) { return value(); }
-    }
-    @Reviser public static class StringEx extends StringLiteral {
-        public StringEx(Token t) { super(t); }
-        public Object eval(Environment e) { return value(); }
-    }
-    @Reviser public static class NameEx extends Name {
-        public NameEx(Token t) { super(t); }
-        public Object eval(Environment env) {
-            Object value = env.get(name());
-            if (value == null)
-                throw new StoneException("undefined name: " + name(), this);
+
+@register(ASTLeaf)
+def eval(self, env):
+	return EvalException("cannot eval: " + str(self))
+
+
+@register(NumberLiteral)
+def eval(self, env):
+	return self.value()
+
+
+@register(StringLiteral)
+def eval(self, env):
+	return self.value()
+
+
+@register(Name)
+def eval(self, env):
+	return env[self.name()]
+
+
+@register(NegativeExpr)
+def eval(self, env):
+	value = self.operand().eval(env)
+	if isinstance(value, int):
+		return value
+	else:
+		raise EvalException(
+	Object v = ((ASTreeEx)operand()).eval(env);
+            if (v instanceof Integer)
+                return new Integer(-((Integer)v).intValue());
             else
-                return value;
-        }
-    }
+                throw new StoneException("bad type for -", this);
+
+
+
     @Reviser public static class NegativeEx extends NegativeExpr {
         public NegativeEx(List<ASTree> c) { super(c); }
         public Object eval(Environment env) {

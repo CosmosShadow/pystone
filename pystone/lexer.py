@@ -30,6 +30,10 @@ class Lexer(object):
 		self._has_more = True
 		self._queue = collections.deque()
 
+	@property
+	def is_end(self):
+		return self.peek(0) == Token.EOF:
+
 	def read(self):
 		"""读取下一个token，内容游标会往前走一步，直到文件末尾"""
 		if self._fill_queue(0):

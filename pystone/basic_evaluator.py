@@ -46,87 +46,67 @@ def eval(self, env):
 	if isinstance(value, int):
 		return value
 	else:
-		raise EvalException(
-	Object v = ((ASTreeEx)operand()).eval(env);
-            if (v instanceof Integer)
-                return new Integer(-((Integer)v).intValue());
-            else
-                throw new StoneException("bad type for -", this);
+		raise EvalException('bad type for -' + str(self))
+
+
+@register(BinaryExpr)
+def eval(self, env):
+	op = self.operator()
+	if op == '=':
+		right_value = self.right().eval(env)
+		return self.compute_assign(env, right_value)
+	else:
+		right_value = self.right().eval(env)
+		left_value = self.left().eval(env)
+		return self.compute_op(left_value, op, right_value)
+
+@register(BinaryExpr)
+def compute_assign(self, env, right_value):
+	left = self.left()
+	if isinstance(left, Name):
+		env[left] = right_value
+		return right_value
+	else:
+		raise EvalException('bad assignment ' + str(self))
+
+@register(BinaryExpr)
+def compute_op(self, left_value, op, right_value):
+	if isinstance(left_value, int) and isinstance(right_value, int):
+		return self.compute_number(left_value, op, right_value)
+	else:
+		if op == '+':
+			return str(left_value) + str(right_value)
+		elif op == '==':
+			if left_value == right_value:
+				return TRUE
+			else:
+				return FALSE
+		else:
+			EvalException('bad type ' + str(self))
+
+@register(BinaryExpr)
+def compute_number(self, left_value, op, right_value):
+	if op == '+':
+		return left_value + right_value
+	elif: op == '-':
+		return left_value - right_value
+	elif op == '*':
+		return a * b
+	elif op == '/':
+		return a / b
+	elif op == '%':
+		return a % b
+	elif op == '==':
+		return TRUE if a == b else FALSE
+	elif op == '>':
+		return TRUE if a > b else FALSE
+	elif op == '<':
+		return TRUE if a < b else FALSE
+	else:
+		EvalException('bad operator ' + str(self))
 
 
 
-    @Reviser public static class NegativeEx extends NegativeExpr {
-        public NegativeEx(List<ASTree> c) { super(c); }
-        public Object eval(Environment env) {
-            Object v = ((ASTreeEx)operand()).eval(env);
-            if (v instanceof Integer)
-                return new Integer(-((Integer)v).intValue());
-            else
-                throw new StoneException("bad type for -", this);
-        }
-    }
-    @Reviser public static class BinaryEx extends BinaryExpr {
-        public BinaryEx(List<ASTree> c) { super(c); }
-        public Object eval(Environment env) {
-            String op = operator();
-            if ("=".equals(op)) {
-                Object right = ((ASTreeEx)right()).eval(env);
-                return computeAssign(env, right);
-            }
-            else {
-                Object left = ((ASTreeEx)left()).eval(env);
-                Object right = ((ASTreeEx)right()).eval(env);
-                return computeOp(left, op, right);
-            }
-        }
-        protected Object computeAssign(Environment env, Object rvalue) {
-            ASTree l = left();
-            if (l instanceof Name) {
-                env.put(((Name)l).name(), rvalue);
-                return rvalue;
-            }
-            else
-                throw new StoneException("bad assignment", this);
-        }
-        protected Object computeOp(Object left, String op, Object right) {
-            if (left instanceof Integer && right instanceof Integer) {
-                return computeNumber((Integer)left, op, (Integer)right);
-            }
-            else
-                if (op.equals("+"))
-                    return String.valueOf(left) + String.valueOf(right);
-                else if (op.equals("==")) {
-                    if (left == null)
-                        return right == null ? TRUE : FALSE;
-                    else
-                        return left.equals(right) ? TRUE : FALSE;
-                }
-                else
-                    throw new StoneException("bad type", this);
-        }
-        protected Object computeNumber(Integer left, String op, Integer right) {
-            int a = left.intValue();
-            int b = right.intValue();
-            if (op.equals("+"))
-                return a + b;
-            else if (op.equals("-"))
-                return a - b;
-            else if (op.equals("*"))
-                return a * b;
-            else if (op.equals("/"))
-                return a / b;
-            else if (op.equals("%"))
-                return a % b;
-            else if (op.equals("=="))
-                return a == b ? TRUE : FALSE;
-            else if (op.equals(">"))
-                return a > b ? TRUE : FALSE;
-            else if (op.equals("<"))
-                return a < b ? TRUE : FALSE;
-            else
-                throw new StoneException("bad operator", this);
-        }
-    }
     @Reviser public static class BlockEx extends BlockStmnt {
         public BlockEx(List<ASTree> c) { super(c); }
         public Object eval(Environment env) {

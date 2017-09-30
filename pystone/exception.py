@@ -10,8 +10,9 @@ class StoneException(Exception):
 
 class ParseException(StoneException):
 	def __init__(self, token, msg=''):
-		super(ParseException, self).__init__((str(token), msg))
+		super(ParseException, self).__init__('语法树解析错误: ' + str(token) + ', ' + msg)
 
 
 class EvalException(StoneException):
-	pass
+	def __init__(self, msg):
+		super(EvalException, self).__init__('执行错误: ' + msg)

@@ -4,6 +4,8 @@ from __future__ import print_function
 from __future__ import division
 
 from nose.tools import *
+
+from pystone.exception import *
 from pystone.enviroment import *
 
 

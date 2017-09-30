@@ -3,6 +3,8 @@ from __future__ import absolute_import
 from __future__ import print_function
 from __future__ import division
 
+from .exception import *
+
 
 class Token(object):
 	"""token(词)，区别于单词
@@ -92,10 +94,6 @@ class StrToken(Token):
 	@property
 	def text(self):
 		return self._string
-
-
-class StoneException(Exception):
-	pass
 
 
 

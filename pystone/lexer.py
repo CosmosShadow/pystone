@@ -92,16 +92,6 @@ def tokenize(code):
 	return tokens
 
 
-class ParseException(Exception):
-	def __init__(self, msg, token=None):
-		if token is None:
-			super(ParseException, self)(msg)
-		else:
-			location = "the last line" if token == Token.EOF else "\"" + t.text + "\" at line " + str(token.line_number)
-			msg = "syntax error around " + location + ". " + msg
-			super(ParseException, self)(msg)
-
-
 
 
 

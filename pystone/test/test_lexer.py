@@ -4,7 +4,9 @@ from __future__ import print_function
 from __future__ import division
 
 from nose.tools import *
+
 from pystone.lexer import *
+
 
 class TestLexer(object):
 	def test_comment(self):

@@ -14,5 +14,17 @@ class ParseException(StoneException):
 
 
 class EvalException(StoneException):
-	def __init__(self, msg):
-		super(EvalException, self).__init__('执行错误: ' + msg)
+	def __init__(self, msg, token=None):
+		msg = '执行错误: ' + msg
+		if token is not None:
+			msg += ', ' + str(token)
+		super(EvalException, self).__init__(msg)
+
+
+
+
+
+
+
+
+

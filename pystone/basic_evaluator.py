@@ -2,7 +2,7 @@
 from __future__ import absolute_import
 from __future__ import print_function
 from __future__ import division
-import lake.decorator.register_fun as register
+from lake.decorator import register_fun as register
 
 from .astree import *
 
@@ -64,7 +64,7 @@ def eval(self, env):
 def compute_assign(self, env, right_value):
 	left = self.left()
 	if isinstance(left, Name):
-		env[left] = right_value
+		env[left.name()] = right_value
 		return right_value
 	else:
 		raise EvalException('bad assignment ' + str(self))
@@ -86,10 +86,12 @@ def compute_op(self, left_value, op, right_value):
 
 @register(BinaryExpr)
 def compute_number(self, left_value, op, right_value):
+	a = left_value
+	b = right_value
 	if op == '+':
-		return left_value + right_value
-	elif: op == '-':
-		return left_value - right_value
+		return a + b
+	elif op == '-':
+		return a - b
 	elif op == '*':
 		return a * b
 	elif op == '/':

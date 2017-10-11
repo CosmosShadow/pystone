@@ -47,7 +47,7 @@ class TestInterpreter(object):
 		results = interperter.run(code)
 		assert_equal(results, ['foo', 15])
 
-	def test_func_3(self):
+	def test_iterator_call(self):
 		code = '''
 		def fib (n) {
 			if n < 2 {
@@ -62,24 +62,39 @@ class TestInterpreter(object):
 		results = interperter.run(code)
 		assert_equal(results, ['fib', 55])
 
+	def test_local_variable(self):
+		code = """
+		a = 40
+		def foo(a) {
+			b = a + 10
+		}
+		c = foo(5)
+		"""
+		interperter = Interpreter(kind='func')
+		results = interperter.run(code)
+		assert_equal(results, [40, 'foo', 15])
+
+	def test_global_variable(self):
+		code = """
+		a = 40
+		def foo() {
+			b = a + 10
+		}
+		c = foo()
+		"""
+		interperter = Interpreter(kind='func')
+		results = interperter.run(code)
+		assert_equal(results, [40, 'foo', 50])
+
 
 if __name__ == '__main__':
 	interperter = Interpreter(kind='func')
-	code = '''
-	def fib (n) {
-		if n < 2 {
-			n
-		} else {
-			fib(n - 1) + fib(n - 2)
-		}
+	code = """
+	a = 40
+	def foo() {
+		b = a + 10
 	}
-	a = fib(10)
-	'''
-	# code = """
-	# def foo(a) {
-	# 	b = a + 10
-	# }
-	# c = foo(5)
-	# """
+	c = foo()
+	"""
 	results = interperter.run(code)
 	print(results)

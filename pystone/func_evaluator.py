@@ -5,8 +5,8 @@ from __future__ import division
 
 from lake.decorator import register_fun as register
 from .astree import *
-from .basic_evalator import *
-from .nested_enviroment import NestedEnviroment
+from .basic_evaluator import *
+from .nested_enviroment import NestedEnv
 
 
 class Function(object):

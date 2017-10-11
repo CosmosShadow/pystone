@@ -78,7 +78,6 @@ class AToken(Element):
 	def parse(self, lexer, astree_list):
 		token = lexer.read()
 		if self.test(token):
-			print(self._astree_class)
 			leaf = self._astree_class(token)
 			astree_list.append(leaf)
 		else:

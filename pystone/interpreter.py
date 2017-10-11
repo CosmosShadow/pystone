@@ -19,12 +19,18 @@ class Interpreter(object):
 		self._lexer_cls = lexer_cls
 
 		#语法器
-		parsers = {'basic_parser': BasicParser, 'func_parser': FuncParser}
+		parsers = {
+				'basic_parser': BasicParser,
+				'func_parser': FuncParser
+		}
 		assert parser in parsers
 		self._parser_cls = parsers[parser]
 
 		# 执行器
-		evaluators = {'basic_evaluator': 'pystone.basic_evaluator'}
+		evaluators = {
+				'basic_evaluator': 'pystone.basic_evaluator',
+				'func_evaluator': 'pystone.func_evaluator'
+		}
 		assert evaluator in evaluators
 		__import__(evaluators[evaluator])
 
@@ -38,7 +44,6 @@ class Interpreter(object):
 			tree = parser.parse(lexer)
 			value = tree.eval(env)
 			results.append(value)
-			print(value)
 		return results
 
 

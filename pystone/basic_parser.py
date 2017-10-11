@@ -58,25 +58,26 @@ class BasicParser(object):
 				rule(WhileStmnt).sep('while').ast(expr).ast(block),
 				simple
 				)
-		self._program = rule().or_(statement, rule(NullStmnt)).sep(';', Token.EOL)
+		self.program = rule().or_(statement, rule(NullStmnt)).sep(';', Token.EOL)
+
 
 	def parse(self, lexer):
-		return self._program.parse(lexer)
+		return self.program.parse(lexer)
 
+	@classmethod
+	def parse_lexer(cls, lexer):
+		basic_parser = cls()
+		tree_arr = []
+		while lexer.peek(0) != Token.EOF:
+			tree = basic_parser.parse(lexer)
+			tree_arr.append(tree)
+		return tree_arr
 
-def parse_lexer(lexer):
-	basic_parser = BasicParser()
-	tree_arr = []
-	while lexer.peek(0) != Token.EOF:
-		tree = basic_parser.parse(lexer)
-		tree_arr.append(tree)
-	return tree_arr
-
-
-def parse_code(code):
-	code_arr = code.split('\n')
-	lexer = Lexer(code_arr)
-	return parse_lexer(lexer)
+	@classmethod
+	def parse_code(cls, code):
+		code_arr = code.split('\n')
+		lexer = Lexer(code_arr)
+		return cls.parse_lexer(lexer)
 
 
 

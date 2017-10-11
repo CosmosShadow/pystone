@@ -30,24 +30,24 @@ class TestBasicParser(object):
 		(while (i < 10) ((if ((i % 2) == 0) (even = (even + i)) else (odd = (odd + i))) (i = (i + 1))))
 		(even + odd)"""
 
-		tree_arr = parse_code(codes)
+		tree_arr = BasicParser.parse_code(codes)
 		for tree, target in zip(tree_arr, syntax_tree.split('\n')):
 			assert_equal(str(tree), target.strip())
 
 
 	def test_parse_negative(self):
-		trees = parse_code('2+-1')
+		trees = BasicParser.parse_code('2+-1')
 		assert_equal(len(trees), 1)
 		assert_equal(str(trees[0]), '(2 + (-1))')
 
 
 	def test_parse_null(self):
-		trees = parse_code('\n')
+		trees = BasicParser.parse_code('\n')
 		assert_equal(trees[0], None)
 
 
 if __name__ == '__main__':
-	trees = parse_code('\n')
+	trees = BasicParser.parse_code('\n')
 	print(trees[0])
 
 

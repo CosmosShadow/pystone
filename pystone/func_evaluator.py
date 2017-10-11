@@ -16,7 +16,7 @@ class Function(object):
 		self._env = env
 
 	def parameters(self):
-		self._parameters
+		return self._parameters
 
 	def body(self):
 		return self._body
@@ -49,7 +49,8 @@ def has_postfix(self, nest):
 
 @register(PrimaryExpr)
 def eval(self, env):
-	self.eval_sub_expr(env, 0)
+	result = self.eval_sub_expr(env, 0)
+	return self.eval_sub_expr(env, 0)
 
 @register(PrimaryExpr)
 def eval_sub_expr(self, env, nest):
@@ -57,7 +58,7 @@ def eval_sub_expr(self, env, nest):
 		obj = self.eval_sub_expr(env, nest + 1)
 		return self.postfix(nest).eval(env, obj)
 	else:
-		self.operand().eval(env)
+		return self.operand().eval(env)
 
 
 @register(Postfix)
@@ -76,6 +77,7 @@ def eval(self, env, func):
 	num = 0
 	for sub_tree in self:
 		params.eval(new_env, num, sub_tree.eval(env))
+		num += 1
 	return func.body().eval(new_env)
 
 

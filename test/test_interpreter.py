@@ -39,21 +39,21 @@ class TestInterpreter(object):
 
 if __name__ == '__main__':
 	interperter = Interpreter(kind='func')
-	# code = '''
-	# def fib (n) {
-	# 	if n < 2 {
-	# 		n
-	# 	} else {
-	# 		fib(n - 1) + fib(n - 2)
-	# 	}
-	# }
-	# fib(10)
-	# '''
-	code = """
-	def foo(a) {
-		b = a + 10
+	code = '''
+	def fib (n) {
+		if n < 2 {
+			n
+		} else {
+			fib(n - 1) + fib(n - 2)
+		}
 	}
-	c = foo(5)
-	"""
+	a = fib(10)
+	'''
+	# code = """
+	# def foo(a) {
+	# 	b = a + 10
+	# }
+	# c = foo(5)
+	# """
 	results = interperter.run(code)
-	print(results)
+	# print(results)

@@ -6,7 +6,7 @@ from __future__ import division
 
 import copy
 from .exception import *
-from .astree import ASTree, ASTLeaf, ASTList, NegativeExpr
+from .astree import ASTree, ASTLeaf, ASTList, NegativeExpr, Arguments, ParameterList
 
 
 class Element(object):
@@ -221,12 +221,16 @@ class Parser(object):
 		astree_list = []
 		for element in self._elements:
 			element.parse(lexer, astree_list)
-		if len(astree_list) == 0:
-			return None
-		elif len(astree_list) == 1 and self._astree_class != NegativeExpr:
-			return astree_list[0]
-		else:
+		# 以下几种树结构不能化解
+		if self._astree_class in [NegativeExpr, Arguments, ParameterList]:
 			return self._astree_class(astree_list)
+		else:
+			if len(astree_list) == 0:
+				return None
+			elif len(astree_list) == 1:
+				return astree_list[0]
+			else:
+				return self._astree_class(astree_list)
 
 	def match(self, lexer):
 		if len(self._elements) == 0:

@@ -28,7 +28,8 @@ class NestedEnv(Enviroment):
 
 	def __setitem__(self, key, value):
 		assert isinstance(key, str)
-		assert isinstance(value, str) or isinstance(value, int)
+		print(key, value)
+		# assert value is not None
 		obj = self._where(key)
 		obj = obj or self
 		obj.put_new(key, value)

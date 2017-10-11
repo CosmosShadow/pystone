@@ -44,21 +44,21 @@ class BasicParser(object):
 				rule().identifier(Name, self.reserved_arr),
 				rule().string(StringLiteral)
 				)
-		factor = rule().or_(
+		self.factor = rule().or_(
 				rule(NegativeExpr).sep('-').ast(self.primary), 
 				self.primary)
-		expr = expr0.expression(BinaryExpr, factor, operators)
+		self.expr = expr0.expression(BinaryExpr, self.factor, operators)
 		statement0 = rule()
-		block = rule(BlockStmnt).sep('{').option(statement0).repeat(
+		self.block = rule(BlockStmnt).sep('{').option(statement0).repeat(
 						rule().sep(';', Token.EOL).option(statement0)
 						).sep('}')
-		simple = rule(PrimaryExpr).ast(expr)
-		statement = statement0.or_(
-				rule(IfStmnt).sep('if').ast(expr).ast(block).option(rule().sep('else').ast(block)),
-				rule(WhileStmnt).sep('while').ast(expr).ast(block),
-				simple
+		self.simple = rule(PrimaryExpr).ast(self.expr)
+		self.statement = statement0.or_(
+				rule(IfStmnt).sep('if').ast(self.expr).ast(self.block).option(rule().sep('else').ast(self.block)),
+				rule(WhileStmnt).sep('while').ast(self.expr).ast(self.block),
+				self.simple
 				)
-		self.program = rule().or_(statement, rule(NullStmnt)).sep(';', Token.EOL)
+		self.program = rule().or_(self.statement, rule(NullStmnt)).sep(';', Token.EOL)
 
 
 	def parse(self, lexer):

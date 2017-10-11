@@ -26,17 +26,17 @@ class FuncParser(BasicParser):
 
 		rule = Parser.rule
 
-		self.param = rule().identifier(self.reserved)
+		self.param = rule().identifier(self.reserved_arr)
 		self.params = rule(ParameterList).ast(self.param).repeat(rule().sep(',').ast(self.param))
-		self.param_arr = rule().sep('(').maybe(params).sep(')')
-		self.def_ = rule(DefStmnt).sep('def').identifier(reserved).ast(self.param_arr).ast(block)
-		self.args = rule(Arguments).ast(expr).repeat(rule().sep(',').ast(expr))
-		self.postfix = rule().sep('(').maybe(args).sep(')')
+		self.param_arr = rule().sep('(').maybe(self.params).sep(')')
+		self.def_ = rule(DefStmnt).sep('def').identifier(self.reserved_arr).ast(self.param_arr).ast(self.block)
+		self.args = rule(Arguments).ast(self.expr).repeat(rule().sep(',').ast(self.expr))
+		self.postfix = rule().sep('(').maybe(self.args).sep(')')
 
-		self.reserved.add(')')
+		self.reserved_arr.append(')')
 		self.primary.repeat(self.postfix)
 		self.simple.option(self.args)
-		self.program.insertChoice(self.def_)
+		self.program.insert_choice(self.def_)
 
 
 

@@ -44,8 +44,8 @@ class TestFuncParser(object):
 		c = foo(5)"""
 
 		syntax_tree = """(d = 10)
-		(def foo a (b = (a + 10)))
-		(c = (foo 5))"""
+		(def foo (a) (b = (a + 10)))
+		(c = (foo (5)))"""
 		self._check(codes, syntax_tree)
 
 

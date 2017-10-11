@@ -43,6 +43,7 @@ class Interpreter(object):
 			tree = parser.parse(lexer)
 			if tree is not None:
 				value = tree.eval(env)
+				print(value)
 				results.append(value)
 		return results
 

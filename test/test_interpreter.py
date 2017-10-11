@@ -36,6 +36,32 @@ class TestInterpreter(object):
 		results = interperter.run(code)
 		assert_equal(results, [0, 1, 10, 45])
 
+	def test_func_2(self):
+		code = """
+		def foo(a) {
+			b = a + 10
+		}
+		c = foo(5)
+		"""
+		interperter = Interpreter(kind='func')
+		results = interperter.run(code)
+		assert_equal(results, ['foo', 15])
+
+	def test_func_3(self):
+		code = '''
+		def fib (n) {
+			if n < 2 {
+				n
+			} else {
+				fib(n - 1) + fib(n - 2)
+			}
+		}
+		a = fib(10)
+		'''
+		interperter = Interpreter(kind='func')
+		results = interperter.run(code)
+		assert_equal(results, ['fib', 55])
+
 
 if __name__ == '__main__':
 	interperter = Interpreter(kind='func')
@@ -56,4 +82,4 @@ if __name__ == '__main__':
 	# c = foo(5)
 	# """
 	results = interperter.run(code)
-	# print(results)
+	print(results)

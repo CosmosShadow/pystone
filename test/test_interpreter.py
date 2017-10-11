@@ -32,19 +32,22 @@ class TestInterpreter(object):
 		    i = i + 1
 		}
 		sum'''
-		interperter = Interpreter(parser='func_parser', evaluator='func_evaluator')
+		interperter = Interpreter(kind='func')
 		results = interperter.run(code)
 		assert_equal(results, [0, 1, 10, 45])
 
 
 if __name__ == '__main__':
-	interperter = Interpreter(parser='func_parser', evaluator='func_evaluator')
-	code = '''sum = 0
-	i = 1
-	while i < 10 {
-	    sum = sum + i
-	    i = i + 1
+	interperter = Interpreter(kind='func')
+	code = '''
+	def fib (n) {
+		if n < 2 {
+			n
+		} else {
+			fib(n - 1) + fib(n - 2)
+		}
 	}
-	sum'''
+	fib(10)
+	'''
 	results = interperter.run(code)
 	print(results)

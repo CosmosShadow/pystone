@@ -8,42 +8,42 @@ from .lexer import Lexer
 from .basic_parser import BasicParser
 from .func_parser import FuncParser
 from .enviroment import Enviroment
+from .nested_enviroment import NestedEnv
 
 
 
 class Interpreter(object):
 	"""解释执行: 词法分析、语法分析、执行"""
-	def __init__(self, lexer_cls=Lexer, parser='basic_parser', evaluator='basic_evaluator'):
+	def __init__(self, lexer_cls=Lexer, kind='basic'):
 		super(Interpreter, self).__init__()
+		assert kind in ['basic', 'func']
+
 		#词法器
 		self._lexer_cls = lexer_cls
 
 		#语法器
-		parsers = {
-				'basic_parser': BasicParser,
-				'func_parser': FuncParser
-		}
-		assert parser in parsers
-		self._parser_cls = parsers[parser]
+		parsers = {'basic': BasicParser, 'func': FuncParser}
+		self._parser_cls = parsers[kind]
+
+		# 上下文环境
+		envs = {'basic': Enviroment, 'func': NestedEnv}
+		self._env_cls = envs[kind]
 
 		# 执行器
-		evaluators = {
-				'basic_evaluator': 'pystone.basic_evaluator',
-				'func_evaluator': 'pystone.func_evaluator'
-		}
-		assert evaluator in evaluators
-		__import__(evaluators[evaluator])
+		evaluators = {'basic': 'pystone.basic_evaluator','func': 'pystone.func_evaluator'}
+		__import__(evaluators[kind])
 
 	def run(self, code):
 		code_arr = code.split('\n')
 		lexer = self._lexer_cls(code_arr)
 		parser = self._parser_cls()
-		env = Enviroment()
+		env = self._env_cls()
 		results = []
 		while not lexer.is_end:
 			tree = parser.parse(lexer)
-			value = tree.eval(env)
-			results.append(value)
+			if tree is not None:
+				value = tree.eval(env)
+				results.append(value)
 		return results
 
 

@@ -6,7 +6,6 @@ from __future__ import division
 from lake.decorator import register_fun as register
 from .astree import *
 from .basic_evaluator import *
-from .nested_enviroment import NestedEnv
 
 
 class Function(object):
@@ -23,7 +22,7 @@ class Function(object):
 		return self._body
 
 	def make_env(self):
-		return NestedEnv(self._env)
+		return self._env.__class__(self._env)
 
 	def __str__(self):
 		return '<fun:' + '' + '>'
@@ -81,7 +80,7 @@ def eval(self, env, func):
 
 
 @register(ParameterList)
-def eval(env, index, value):
+def eval(self, env, index, value):
 	env.put_new(self.name(index), value)
 
 

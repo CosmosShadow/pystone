@@ -155,7 +155,7 @@ class DefStmnt(ASTList):
 		return self.child(2)
 
 	def __str__(self):
-		return '(def ' + name() + ' ' + parameters() + ' ' + body() + ')'
+		return '(def ' + str(self.name()) + ' ' + str(self.parameters()) + ' ' + str(self.body()) + ')'
 
 
 class Postfix(ASTList):

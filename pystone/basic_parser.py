@@ -41,7 +41,7 @@ class BasicParser(object):
 		self.primary = rule(PrimaryExpr).or_(
 				rule().sep('(').ast(expr0).sep(')'),
 				rule().number(NumberLiteral),
-				rule().identifier(Name, self.reserved_arr),
+				rule().identifier(reserved_arr=self.reserved_arr, astree_class=Name),
 				rule().string(StringLiteral)
 				)
 		self.factor = rule().or_(

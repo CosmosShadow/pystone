@@ -10,7 +10,12 @@ from pystone.func_parser import *
 
 
 class TestFuncParser(object):
-	def test_parser(self):
+	def _check(self, codes, syntax_tree):
+		tree_arr = FuncParser.parse_code(codes)
+		for tree, target in zip(tree_arr, syntax_tree.split('\n')):
+			assert_equal(str(tree), target.strip())
+
+	def test_basic_parser(self):
 		codes = """even = 0
 		odd = 0
 		i = 1
@@ -29,10 +34,19 @@ class TestFuncParser(object):
 		(i = 1)
 		(while (i < 10) ((if ((i % 2) == 0) (even = (even + i)) else (odd = (odd + i))) (i = (i + 1))))
 		(even + odd)"""
+		self._check(codes, syntax_tree)
 
-		tree_arr = FuncParser.parse_code(codes)
-		for tree, target in zip(tree_arr, syntax_tree.split('\n')):
-			assert_equal(str(tree), target.strip())
+	def test_func_parser(self):
+		codes = """d = 10
+		def foo(a) {
+			b = a + 10
+		}
+		c = foo(5)"""
+
+		syntax_tree = """(d = 10)
+		(def foo a (b = (a + 10)))
+		(c = (foo 5))"""
+		self._check(codes, syntax_tree)
 
 
 	def test_parse_negative(self):
@@ -47,9 +61,7 @@ class TestFuncParser(object):
 
 
 if __name__ == '__main__':
-	trees = FuncParser.parse_code('\n')
-	print(trees[0])
-
+	pass
 
 
 

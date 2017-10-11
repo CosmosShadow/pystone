@@ -22,7 +22,7 @@ from .lexer import Lexer
 class BasicParser(object):
 	def __init__(self):
 		super(BasicParser, self).__init__()
-		reserved_arr = [";", "}", Token.EOL]
+		self.reserved_arr = [";", "}", Token.EOL]
 
 		operators = Operators()
 		operators.add("=", 1, Operators.RIGHT)
@@ -38,15 +38,15 @@ class BasicParser(object):
 		rule = Parser.rule
 
 		expr0 = rule()
-		primary = rule(PrimaryExpr).or_(
+		self.primary = rule(PrimaryExpr).or_(
 				rule().sep('(').ast(expr0).sep(')'),
 				rule().number(NumberLiteral),
-				rule().identifier(Name, reserved_arr),
+				rule().identifier(Name, self.reserved_arr),
 				rule().string(StringLiteral)
 				)
 		factor = rule().or_(
-				rule(NegativeExpr).sep('-').ast(primary), 
-				primary)
+				rule(NegativeExpr).sep('-').ast(self.primary), 
+				self.primary)
 		expr = expr0.expression(BinaryExpr, factor, operators)
 		statement0 = rule()
 		block = rule(BlockStmnt).sep('{').option(statement0).repeat(

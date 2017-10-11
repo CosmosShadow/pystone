@@ -136,6 +136,36 @@ class NullStmnt(ASTList):
 	pass
 
 
+class ParameterList(ASTList):
+	def name(self, index):
+		return self.child(index).token().text
+
+	def size(self):
+		return self.child_count
+
+
+
+class DefStmnt(ASTList):
+	def name(self):
+		return self.child(0).token().text
+
+	def parameters(self):
+		return self.child(1)
+
+	def body(self):
+		return self.child(2)
+
+	def __str__(self):
+		return '(def ' + name() + ' ' + parameters() + ' ' + body() + ')'
+
+
+class Postfix(ASTList):
+	pass
+
+
+class Arguments(Postfix):
+	def size(self):
+		return self.child_count
 
 
 

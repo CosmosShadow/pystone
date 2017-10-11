@@ -6,18 +6,27 @@ import sys
 
 from .lexer import Lexer
 from .basic_parser import BasicParser
+from .func_parser import FuncParser
 from .enviroment import Enviroment
 
 
 
 class Interpreter(object):
 	"""解释执行: 词法分析、语法分析、执行"""
-	def __init__(self, lexer_cls=Lexer, parser_cls=BasicParser, evaluator_file='pystone.basic_evaluator'):
+	def __init__(self, lexer_cls=Lexer, parser='basic_parser', evaluator='basic_evaluator'):
 		super(Interpreter, self).__init__()
-		self._lexer_cls = lexer_cls 				#词法器
-		self._parser_cls = parser_cls 			#语法器
-		# 执行器绑定到语法树中
-		__import__(evaluator_file)
+		#词法器
+		self._lexer_cls = lexer_cls
+
+		#语法器
+		parsers = {'basic_parser': BasicParser, 'func_parser': FuncParser}
+		assert parser in parsers
+		self._parser_cls = parsers[parser]
+
+		# 执行器
+		evaluators = {'basic_evaluator': 'pystone.basic_evaluator'}
+		assert evaluator in evaluators
+		__import__(evaluators[evaluator])
 
 	def run(self, code):
 		code_arr = code.split('\n')

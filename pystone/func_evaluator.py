@@ -49,7 +49,6 @@ def has_postfix(self, nest):
 
 @register(PrimaryExpr)
 def eval(self, env):
-	result = self.eval_sub_expr(env, 0)
 	return self.eval_sub_expr(env, 0)
 
 @register(PrimaryExpr)

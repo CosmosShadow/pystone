@@ -100,6 +100,22 @@ class TestInterpreter(object):
 		# foo()函数影响了外部参数
 		assert_equal(results, [40, 'foo', 50, 50])
 
+	def test_closure(self):
+		code = """
+		def counter (c) {
+			fun () { c = c + 1 }
+		}
+		c1 = counter(0)
+		c2 = counter(0)
+		c1()
+		c1()
+		c2()
+		"""
+		interperter = Interpreter(kind='closure')
+		results = interperter.run(code)
+
+		assert_equal(results[-3:], [1, 2, 1])
+
 
 if __name__ == '__main__':
 	interperter = Interpreter(kind='closure')
@@ -115,3 +131,19 @@ if __name__ == '__main__':
 	"""
 	results = interperter.run(code)
 	print(results)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

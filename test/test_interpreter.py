@@ -24,7 +24,7 @@ class TestInterpreter(object):
 		results = default_run(code)
 		assert_equal(results, [0, 1, 10, 45])
 
-	def test_func_1(self):
+	def test_func_run_basic(self):
 		code = '''sum = 0
 		i = 1
 		while i < 10 {
@@ -36,7 +36,7 @@ class TestInterpreter(object):
 		results = interperter.run(code)
 		assert_equal(results, [0, 1, 10, 45])
 
-	def test_func_2(self):
+	def test_func_run_func(self):
 		code = """
 		def foo(a) {
 			b = a + 10
@@ -47,7 +47,7 @@ class TestInterpreter(object):
 		results = interperter.run(code)
 		assert_equal(results, ['foo', 15])
 
-	def test_iterator_call(self):
+	def test_func_iterator_call(self):
 		code = '''
 		def fib (n) {
 			if n < 2 {
@@ -62,7 +62,7 @@ class TestInterpreter(object):
 		results = interperter.run(code)
 		assert_equal(results, ['fib', 55])
 
-	def test_local_variable(self):
+	def test_func_local_variable(self):
 		code = """
 		a = 40
 		def foo(a) {
@@ -74,7 +74,7 @@ class TestInterpreter(object):
 		results = interperter.run(code)
 		assert_equal(results, [40, 'foo', 15])
 
-	def test_global_variable(self):
+	def test_func_global_variable(self):
 		code = """
 		a = 40
 		def foo() {

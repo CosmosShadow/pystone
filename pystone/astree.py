@@ -167,6 +167,16 @@ class Arguments(Postfix):
 		return self.child_count
 
 
+class Fun(ASTList):
+	def parameters(self):
+		return self.child(0)
+
+	def body(self):
+		return self.child(1)
+
+	def __str__(self):
+		return '(fun ' + str(self.parameters()) + ' ' + str(self.body()) + ')'
+
 
 
 

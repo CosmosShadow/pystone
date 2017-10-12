@@ -102,14 +102,16 @@ class TestInterpreter(object):
 
 
 if __name__ == '__main__':
-	interperter = Interpreter(kind='func')
+	interperter = Interpreter(kind='closure')
 	code = """
-	a = 40
-	def foo() {
-		a = 50
+	def counter (c) {
+		fun () { c = c + 1 }
 	}
-	foo()
-	a
+	c1 = counter(0)
+	c2 = counter(0)
+	c1()
+	c1()
+	c2()
 	"""
 	results = interperter.run(code)
 	print(results)

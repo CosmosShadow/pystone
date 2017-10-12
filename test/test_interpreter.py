@@ -86,15 +86,30 @@ class TestInterpreter(object):
 		results = interperter.run(code)
 		assert_equal(results, [40, 'foo', 50])
 
+	def test_func_namesapce(self):
+		code = """
+		a = 40
+		def foo() {
+			a = 50
+		}
+		foo()
+		a
+		"""
+		interperter = Interpreter(kind='func')
+		results = interperter.run(code)
+		# foo()函数影响了外部参数
+		assert_equal(results, [40, 'foo', 50, 50])
+
 
 if __name__ == '__main__':
 	interperter = Interpreter(kind='func')
 	code = """
 	a = 40
 	def foo() {
-		b = a + 10
+		a = 50
 	}
-	c = foo()
+	foo()
+	a
 	"""
 	results = interperter.run(code)
 	print(results)

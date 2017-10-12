@@ -74,10 +74,9 @@ def eval(self, env, func):
 	if self.size() != params.size():
 		raise StoneException('bad number of arguments', self)
 	new_env = func.make_env()
-	num = 0
-	for sub_tree in self:
-		params.eval(new_env, num, sub_tree.eval(env))
-		num += 1
+	# 实参传递到形参
+	for index, sub_tree in enumerate(self):
+		params.eval(new_env, index, sub_tree.eval(env))
 	return func.body().eval(new_env)
 
 

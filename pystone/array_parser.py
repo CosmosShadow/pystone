@@ -22,8 +22,8 @@ class ArrayParser(ClassParser):
 
 		self.elements = rule(ArrayLiteral).ast(self.expr).repeat( rule().sep( ',' ).ast(self.expr) )
 		self.reserved_arr.append( ']' )
-		self.primary.insert_choice( rule().sep( '[' ).maybe(elements).sep( ']' ) )
-		self.postfix.insert_choice( rule(ArrayRef).sep( '[' ).ast(expr).sep( ']' ) )
+		self.primary.insert_choice( rule().sep( '[' ).maybe(self.elements).sep( ']' ) )
+		self.postfix.insert_choice( rule(ArrayRef).sep( '[' ).ast(self.expr).sep( ']' ) )
 
 
 

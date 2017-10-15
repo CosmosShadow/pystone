@@ -3,7 +3,7 @@
 
 
 
-### Reference
+### 参考
 
 [两周自制脚本语言](http://www.ituring.com.cn/book/1215)
 [python开发编译器](http://www.cnblogs.com/lrysjtu/p/6256493.html)
@@ -11,9 +11,32 @@
 
 
 
-### Todo
+### 进度
 
-- [第 8 天　关联 Java 语言](http://www.ituring.com.cn/book/tupubarticle/4112)
-- [第 9 天　设计面向对象语言](http://www.ituring.com.cn/book/tupubarticle/4113)
-- [第 10 天　无法割舍的数组](http://www.ituring.com.cn/book/tupubarticle/4114)
-- [第 15 天　手工设计词法分析器](http://www.ituring.com.cn/book/tupubarticle/4121)
+
+* [x] 第 1 部分　基础篇
+  * [x] 第 1 天　来，我们一起做些什么吧
+  * [x] 第 2 天　设计程序设计语言
+  * [x] 第 3 天　分割单词
+  * [x] 第 4 天　用于表示程序的对象
+  * [x] 第 5 天　设计语法分析器
+  * [x] 第 6 天　通过解释器执行程序
+  * [x] 第 7 天　添加函数功能
+  * [x] 第 8 天　关联 Java 语言
+  * [x] 第 9 天　设计面向对象语言
+  * [x] 第 10 天　无法割舍的数组
+* [ ] 第 2 部分　性能优化篇
+  * [ ] 第 11 天　优化变量读写性能
+  * [ ] 第 12 天　优化对象操作性能
+  * [ ] 第 13 天　设计中间代码解释器
+  * [ ] 第 14 天　为 Stone 语言添加静态类型支持以优化性能
+  * [ ] 第 3 部分　解说篇（自习时间）
+  * [ ] 第 15 天　手工设计词法分析器
+  * [ ] 第 16 天　语法分析方式
+  * [ ] 第 17 天　Parser 库的内部结构
+  * [ ] 第 18 天　GluonJ 的使用方法
+  * [ ] 第 19 天　抽象语法树与设计模式
+
+
+
+

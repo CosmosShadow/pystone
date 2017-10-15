@@ -6,7 +6,7 @@ from __future__ import division
 
 import copy
 from .exception import *
-from .astree import ASTree, ASTLeaf, ASTList, NegativeExpr, Arguments, ParameterList
+from .astree import ASTree, ASTLeaf, ASTList, NegativeExpr, Arguments, ParameterList, Dot
 
 
 class Element(object):
@@ -222,7 +222,7 @@ class Parser(object):
 		for element in self._elements:
 			element.parse(lexer, astree_list)
 		# 以下几种树结构不能化解
-		if self._astree_class in [NegativeExpr, Arguments, ParameterList]:
+		if self._astree_class in [NegativeExpr, Arguments, ParameterList, Dot]:
 			return self._astree_class(astree_list)
 		else:
 			if len(astree_list) == 0:

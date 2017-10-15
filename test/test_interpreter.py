@@ -149,10 +149,17 @@ class TestInterpreter(object):
 if __name__ == '__main__':
 	interperter = Interpreter(kind='class')
 	code = """
-	a = "12"
-	print(a)
+	class Position {
+		x = y = 0
+		def move (nx, ny) {
+			x = nx; y = ny
+		}
+	}
+	p = Position.new
+	p.move(3, 4)
+	p.x = 10
+	print p.x + p.y
 	"""
-	# ['12', 17]
 	results = interperter.run(code)
 	print(results)
 

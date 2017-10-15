@@ -9,21 +9,25 @@ from .native_evaluator import *
 
 
 class ClassInfo(object):
-	def __init__(self, definition, env):
-		self._definition = definition
+	def __init__(self, class_stmnt, env):
+		self._class_stmnt = class_stmnt
 		self._env = env
-		self._super_class = self._env.get(self._definition.super_class())
+		super_class_name = self._class_stmnt.super_class()
+		if super_class_name is None:
+			self._super_class = None
+		else:
+			self._super_class = self._env[super_class_name]
 		if self._super_class is not None and not isinstance(ClassInfo):
-			raise StoneException("unknown super class: " + self._super_class, self._definition)
+			raise StoneException("unknown super class: " + self._super_class, self._class_stmnt)
 
 	def name(self):
-		return self._definition.name()
+		return self._class_stmnt.name()
 
 	def super_class(self):
 		return self._super_class
 
 	def body(self):
-		return self._definition.body()
+		return self._class_stmnt.body()
 
 	def envrioment(self):
 		return self._env
@@ -56,10 +60,11 @@ class StoneObject(object):
 
 
 @register(ClassStmnt)
-def eval(self):
+def eval(self, env):
 	class_info = ClassInfo(self, env)
-	env.put(self.name(), class_info)
-	return name()
+	name = self.name()
+	env[name] = class_info
+	return name
 
 
 @register(ClassBody)
@@ -110,7 +115,7 @@ def compute_assign(self, env, right_value):
 	return binary_expr_old_compute_assign(self, env, right_value)
 
 @register(BinaryExpr)
-def set_field(stone_object, dot, right_value):
+def set_field(self, stone_object, dot, right_value):
 	name = dot.name()
 	try:
 		stone_object.write(name, right_value)

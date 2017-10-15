@@ -198,12 +198,12 @@ class ClassStmnt(ASTList):
 	def __str__(self):
 		parent = self.super_class()
 		parent = parent or '*'
-		return "(class " + self.name() + " " + parent + " " + body() + ")"
+		return "(class " + self.name() + " " + parent + " " + str(self.body()) + ")"
 
 
 class Dot(Postfix):
 	def name(self):
-		self.child(0).token().text
+		return self.child(0).token().text
 
 	def __str__(self):
 		return "." + self.name()

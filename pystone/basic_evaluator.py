@@ -5,6 +5,7 @@ from __future__ import division
 from lake.decorator import register_fun as register
 
 from .astree import *
+from .exception import *
 
 TRUE = 1
 FALSE = 0

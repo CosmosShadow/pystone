@@ -37,7 +37,7 @@ class Interpreter(object):
 		evaluators = {
 		'basic': 'pystone.basic_evaluator',
 		'func': 'pystone.func_evaluator',
-		'closure': 'pystone.closure_evaluator'
+		'closure': 'pystone.closure_evaluator',
 		'native': 'pystone.native_evaluator'}
 		self._evaluator = __import__(evaluators[kind])
 
@@ -47,7 +47,8 @@ class Interpreter(object):
 		parser = self._parser_cls()
 		env = self._env_cls()
 		if self._kind == 'native':
-			env = self._evaluator.Natives().environment(env)
+			print(dir(self._evaluator))
+			env = self._evaluator.native_evaluator.Natives().environment(env)
 		results = []
 		while not lexer.is_end:
 			tree = parser.parse(lexer)

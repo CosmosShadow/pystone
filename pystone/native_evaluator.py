@@ -35,7 +35,7 @@ def eval(self, env, func):
 		return arguments_old_eval(self, env, func)
 	else:
 		if self.size() != func.args_count:
-			throw new StoneException("bad number of arguments", self)
+			raise StoneException("bad number of arguments", self)
 		args = [subtree.eval(env) for subtree in self]
 		return func.invoke(args, self)
 
@@ -55,7 +55,7 @@ class Natives(object):
 			method = getattr(cls, method_name)
 		except Exception as e:
 			raise StoneException("cannot find a native function: " + methodName)
-		env.put_new(name, NativeFunction(method_name, method))
+		env.put_new(name, NativeFunction(method_name, method, args_count))
 
 	@staticmethod
 	def print_(obj):

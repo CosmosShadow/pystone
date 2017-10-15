@@ -67,6 +67,7 @@ def eval(self, env):
 
 @register(Arguments)
 def eval(self, env, func):
+	print(type(func))
 	if not isinstance(func, Function):
 		raise StoneException('bad function', self)
 	params = func.parameters()

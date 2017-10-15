@@ -118,7 +118,7 @@ class TestInterpreter(object):
 
 
 if __name__ == '__main__':
-	interperter = Interpreter(kind='closure')
+	interperter = Interpreter(kind='native')
 	code = """
 	def counter (c) {
 		fun () { c = c + 1 }

@@ -3,6 +3,7 @@ from __future__ import absolute_import
 from __future__ import print_function
 from __future__ import division
 import sys
+import importlib
 
 from .lexer import Lexer
 
@@ -39,7 +40,7 @@ class Interpreter(object):
 		'func': 'pystone.func_evaluator',
 		'closure': 'pystone.closure_evaluator',
 		'native': 'pystone.native_evaluator'}
-		self._evaluator = __import__(evaluators[kind])
+		self._evaluator = importlib.import_module('pystone.native_evaluator', 'pystone')
 
 	def run(self, code):
 		code_arr = code.split('\n')
@@ -47,8 +48,7 @@ class Interpreter(object):
 		parser = self._parser_cls()
 		env = self._env_cls()
 		if self._kind == 'native':
-			print(dir(self._evaluator))
-			env = self._evaluator.native_evaluator.Natives().environment(env)
+			env = self._evaluator.Natives().environment(env)
 		results = []
 		while not lexer.is_end:
 			tree = parser.parse(lexer)

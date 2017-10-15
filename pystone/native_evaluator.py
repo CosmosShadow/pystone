@@ -5,7 +5,7 @@ from __future__ import division
 
 from lake.decorator import register_fun as register
 from .astree import *
-from .func_evaluator import *
+from .closure_evaluator import *
 
 
 class NativeFunction(object):

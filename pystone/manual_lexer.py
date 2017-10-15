@@ -14,7 +14,10 @@ class ManualLexer(object):
 		self._queue = collections.deque(list(string))
 
 	def next_char(self):
-		return self._queue.popleft()
+		if len(self._queue) > 0:
+			return self._queue.popleft()
+		else:
+			return None
 
 	def get_char(self):
 		if self._last_char == self.EMPTY:
@@ -29,9 +32,12 @@ class ManualLexer(object):
 
 	def read(self):
 		paths = []
-		char = None
-		while char is None or self.is_space(char):
-			char = self.get_char()
+
+		tmp_char = ' '
+		while tmp_char is not None and self.is_space(tmp_char):
+			tmp_char = self.get_char()
+
+		char = tmp_char
 
 		if char < 0:
 			return None
@@ -60,7 +66,7 @@ class ManualLexer(object):
 		return ''.join(paths)
 
 
-	def is_letter(char):
+	def is_letter(self, char):
 		return ('A' <= char and char <= 'Z') or ('a' <= char and char <= 'z')
 
 	def is_digit(self, char):
@@ -69,3 +75,12 @@ class ManualLexer(object):
 	def is_space(self, char):
 		return 0 <= char and char <= ' '
 
+
+def tokenize(string):
+	lexer = ManualLexer(string)
+	token = lexer.read()
+	results = []
+	while token is not None:
+		results.append(token)
+		token = lexer.read()
+	return results

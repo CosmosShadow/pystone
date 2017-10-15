@@ -4,6 +4,8 @@
 from __future__ import absolute_import
 from __future__ import print_function
 from __future__ import division
+import json
+
 from .token import *
 
 
@@ -24,6 +26,10 @@ class Enviroment(object):
 		assert value != None
 		assert isinstance(value, str) or isinstance(value, int)
 		self._values[key] = value
+
+	def __repr__(self):
+		return json.dumps(self._values)
+
 
 
 

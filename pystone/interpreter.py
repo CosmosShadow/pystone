@@ -21,8 +21,9 @@ class Interpreter(object):
 	"""解释执行: 词法分析、语法分析、执行"""
 	def __init__(self, lexer_cls=Lexer, kind='basic'):
 		super(Interpreter, self).__init__()
-		assert kind in ['basic', 'func', 'closure', 'native', 'class']
 		self._kind = kind
+		self._kinds = ['basic', 'func', 'closure', 'native', 'class']
+		assert self._kind in self._kinds
 
 		#词法器
 		self._lexer_cls = lexer_cls
@@ -49,7 +50,8 @@ class Interpreter(object):
 		lexer = self._lexer_cls(code_arr)
 		parser = self._parser_cls()
 		env = self._env_cls()
-		if self._kind == 'native':
+		# 类别超出了native都应适配native环境
+		if self._kinds.index(self._kind) >= self._kinds.index('native'):
 			env = self._evaluator.Natives().environment(env)
 		results = []
 		while not lexer.is_end:

@@ -2,6 +2,8 @@
 from __future__ import absolute_import
 from __future__ import print_function
 from __future__ import division
+import copy
+import json
 
 from .enviroment import Enviroment
 from .exception import *
@@ -40,3 +42,13 @@ class NestedEnv(Enviroment):
 			return None
 		else:
 			return self._outer._where(key)
+
+	def __repr__(self):
+		values = copy.deepcopy(self._values)
+		if self._outer is not None:
+			values['_outer'] = repr(self._outer)
+		return json.dumps(values)
+
+
+
+

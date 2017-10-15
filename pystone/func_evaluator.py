@@ -55,9 +55,11 @@ def eval(self, env):
 def eval_sub_expr(self, env, nest):
 	if self.has_postfix(nest):
 		obj = self.eval_sub_expr(env, nest + 1)
-		print(type(self.postfix(nest)))
-		print(self.postfix(nest))
-		return self.postfix(nest).eval(env, obj)
+		tree = self.postfix(nest)
+		print(tree)
+		print(type(tree))
+		print(obj)
+		return tree.eval(env, obj)
 	else:
 		return self.operand().eval(env)
 

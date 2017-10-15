@@ -161,6 +161,19 @@ class TestInterpreter(object):
 		assert_equal(results[0], 'Position')
 		assert_equal(results[-3:], [4, 10, 14])
 
+	def test_array(self):
+		codes = """
+		a = [2, 3, 4]
+		a[1]
+		a[1] = "three"
+		print "a[1]: " + a[1]
+		b = [["one", 1], ["two", 2]]
+		b[0][0] + ": " + b[1][1]
+		"""
+		interperter = Interpreter(kind='array')
+		results = interperter.run(codes)
+		assert_equal(results, [[2, 'three', 4], 3, 'three', 0, [['one', 1], ['two', 2]], 'one: 2'])
+
 
 if __name__ == '__main__':
 	codes = """
@@ -169,7 +182,7 @@ if __name__ == '__main__':
 	a[1] = "three"
 	print "a[1]: " + a[1]
 	b = [["one", 1], ["two", 2]]
-	b[1][0] + ": " + b[1][1]
+	b[0][0] + ": " + b[1][1]
 	"""
 	interperter = Interpreter(kind='array')
 	results = interperter.run(codes)

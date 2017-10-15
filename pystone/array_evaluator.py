@@ -13,7 +13,7 @@ def eval(self, env):
 	return [sub_tree.eval(env) for sub_tree in self]
 
 
-@register(ArrayLiteral)
+@register(ArrayRef)
 def eval(self, env, value):
 	if isinstance(value, list):
 		index = self.index().eval(env)

@@ -9,7 +9,7 @@ from .token import *
 from .lexer import Lexer
 from .closure_parser import ClosureParser
 
-# 闭包(函数作为参数)语法解析
+# 类语法解析
 
 # member   : def | simple
 # class_body : "{" [ member ] {(";" | EOL) [ member ]} "}"

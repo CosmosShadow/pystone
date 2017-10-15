@@ -202,6 +202,7 @@ class ClassStmnt(ASTList):
 
 
 class Dot(Postfix):
+	"""类中的点运算抽象语法树"""
 	def name(self):
 		return self.child(0).token().text
 
@@ -209,7 +210,19 @@ class Dot(Postfix):
 		return "." + self.name()
 
 
+class ArrayLiteral(ASTList):
+	"""数组抽象语法树"""
+	def size(self):
+		return self.child_count
 
+
+class ArrayRef(Postfix):
+	"""数组访问抽象语法树"""
+	def index(self):
+		return self.child(0)
+
+	def __str__(self):
+		return '[' + str(self.index()) + ']'
 
 
 

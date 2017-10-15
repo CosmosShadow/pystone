@@ -31,17 +31,17 @@ class NestedEnv(Enviroment):
 
 	def __setitem__(self, key, value):
 		assert isinstance(key, str)
-		obj = self._where(key)
+		obj = self.where(key)
 		obj = obj or self
 		obj.put_new(key, value)
 
-	def _where(self, key):
+	def where(self, key):
 		if key in self._values:
 			return self
 		elif self._outer is None:
 			return None
 		else:
-			return self._outer._where(key)
+			return self._outer.where(key)
 
 	def __repr__(self):
 		values = copy.deepcopy(self._values)

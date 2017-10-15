@@ -29,7 +29,7 @@ class ClassInfo(object):
 	def body(self):
 		return self._class_stmnt.body()
 
-	def envrioment(self):
+	def enviroment(self):
 		return self._env
 
 	def __str__(self):
@@ -80,10 +80,10 @@ def eval(self, env, value):
 	if isinstance(value, ClassInfo):
 		if member == 'new':
 			class_info = value
-			local_env = class_info.environment()
+			local_env = class_info.enviroment()
 			new_env = local_env.__class__(local_env)
 			stone_object = StoneObject(new_env)
-			new_env.putNew("this", stone_object)
+			new_env.put_new("this", stone_object)
 			self.init_object(class_info, new_env)
 			return stone_object
 	if isinstance(value, StoneObject):

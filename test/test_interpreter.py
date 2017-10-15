@@ -143,11 +143,26 @@ class TestInterpreter(object):
 		results = interperter.run(code)
 		assert_equal(results, ['12', 0])
 
-
+	def test_class(self):
+		code = """
+		class Position {
+			x = y = 0
+			def move (nx, ny) {
+				x = nx; y = ny
+			}
+		}
+		p = Position.new
+		p.move(3, 4)
+		p.x = 10
+		p.x + p.y
+		"""
+		interperter = Interpreter(kind='class')
+		results = interperter.run(code)
+		assert_equal(results[0], 'Position')
+		assert_equal(results[-3:], [4, 10, 14])
 
 
 if __name__ == '__main__':
-	interperter = Interpreter(kind='class')
 	code = """
 	class Position {
 		x = y = 0
@@ -158,8 +173,9 @@ if __name__ == '__main__':
 	p = Position.new
 	p.move(3, 4)
 	p.x = 10
-	print p.x + p.y
+	p.x + p.y
 	"""
+	interperter = Interpreter(kind='class')
 	results = interperter.run(code)
 	print(results)
 

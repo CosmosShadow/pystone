@@ -13,7 +13,6 @@
 
 ### Todo
 
-- [第 7 天　添加函数功能](http://www.ituring.com.cn/book/tupubarticle/4111)
 - [第 8 天　关联 Java 语言](http://www.ituring.com.cn/book/tupubarticle/4112)
 - [第 9 天　设计面向对象语言](http://www.ituring.com.cn/book/tupubarticle/4113)
 - [第 10 天　无法割舍的数组](http://www.ituring.com.cn/book/tupubarticle/4114)

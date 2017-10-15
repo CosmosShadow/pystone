@@ -84,29 +84,28 @@ class TestArrayParser(object):
 		codes = """a = [2, 3, 4]
 		a[1]
 		a[1] = "three"
-		print "a[1]: " + a[1]
+		a[1]
 		b = [["one", 1], ["two", 2]]
-		b[1][0] + ": " + b[1][1]"""
+		b[1][0] + b[1][1]"""
 
-		syntax_tree = """(a = (2 3 4))
+		syntax_tree = """(a = [2 3 4])
 		(a 1)
 		((a 1) = three)
-		(print ((a[1]:  + (a 1))))
-		(b = (one", 1], ["two 2))
-		(((b 1 0) + : ) + (b 1 1))"""
+		(a 1)
+		(b = [one", 1], ["two 2])
+		((b 1 0) + (b 1 1))
+		"""
 
 		self._check(codes, syntax_tree)
 
 
 if __name__ == '__main__':
-	codes = """
-	a = [2, 3, 4]
+	codes = """a = [2, 3, 4]
 	a[1]
 	a[1] = "three"
-	print "a[1]: " + a[1]
+	a[1]
 	b = [["one", 1], ["two", 2]]
-	b[1][0] + ": " + b[1][1]
-	"""
+	b[1][0] + b[1][1]"""
 	trees = ArrayParser.parse_code(codes)
 	for tree in trees:
 		print(tree)

@@ -215,6 +215,9 @@ class ArrayLiteral(ASTList):
 	def size(self):
 		return self.child_count
 
+	def __str__(self):
+		return '[' + ' '.join(map(str, self._children)) +  ']'
+
 
 class ArrayRef(Postfix):
 	"""数组访问抽象语法树"""

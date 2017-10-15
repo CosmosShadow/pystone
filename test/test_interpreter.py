@@ -163,20 +163,16 @@ class TestInterpreter(object):
 
 
 if __name__ == '__main__':
-	code = """
-	class Position {
-		x = y = 0
-		def move (nx, ny) {
-			x = nx; y = ny
-		}
-	}
-	p = Position.new
-	p.move(3, 4)
-	p.x = 10
-	p.x + p.y
+	codes = """
+	a = [2, 3, 4]
+	a[1]
+	a[1] = "three"
+	print "a[1]: " + a[1]
+	b = [["one", 1], ["two", 2]]
+	b[1][0] + ": " + b[1][1]
 	"""
-	interperter = Interpreter(kind='class')
-	results = interperter.run(code)
+	interperter = Interpreter(kind='array')
+	results = interperter.run(codes)
 	print(results)
 
 

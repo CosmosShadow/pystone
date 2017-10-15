@@ -11,6 +11,7 @@ from .basic_parser import BasicParser
 from .func_parser import FuncParser
 from .closure_parser import ClosureParser
 from .class_parser import ClassParser
+from .array_parser import ArrayParser
 
 from .enviroment import Enviroment
 from .nested_enviroment import NestedEnv
@@ -22,18 +23,18 @@ class Interpreter(object):
 	def __init__(self, lexer_cls=Lexer, kind='basic'):
 		super(Interpreter, self).__init__()
 		self._kind = kind
-		self._kinds = ['basic', 'func', 'closure', 'native', 'class']
+		self._kinds = ['basic', 'func', 'closure', 'native', 'class', 'array']
 		assert self._kind in self._kinds
 
 		#词法器
 		self._lexer_cls = lexer_cls
 
 		#语法器
-		parsers = {'basic': BasicParser, 'func': FuncParser, 'closure': ClosureParser, 'native': ClosureParser, 'class': ClassParser}
+		parsers = {'basic': BasicParser, 'func': FuncParser, 'closure': ClosureParser, 'native': ClosureParser, 'class': ClassParser, 'array': ArrayParser}
 		self._parser_cls = parsers[kind]
 
 		# 上下文环境
-		envs = {'basic': Enviroment, 'func': NestedEnv, 'closure': NestedEnv, 'native': NestedEnv, 'class': NestedEnv}
+		envs = {'basic': Enviroment, 'func': NestedEnv, 'closure': NestedEnv, 'native': NestedEnv, 'class': NestedEnv, 'array': NestedEnv}
 		self._env_cls = envs[kind]
 
 		# 执行器
@@ -42,7 +43,8 @@ class Interpreter(object):
 		'func': 'pystone.func_evaluator',
 		'closure': 'pystone.closure_evaluator',
 		'native': 'pystone.native_evaluator',
-		'class': 'pystone.class_evaluator'}
+		'class': 'pystone.class_evaluator',
+		'array': 'pystone.array_evaluator'}
 		self._evaluator = importlib.import_module(evaluators[kind], 'pystone')
 
 	def run(self, code):

@@ -100,7 +100,10 @@ class TestArrayParser(object):
 
 
 if __name__ == '__main__':
-	codes = """b = [["one", 1], ["two", 2]]"""
+	# codes = """b = [["one", 1], ["two", 2]]"""
+	# codes = """b = [[1, 2], [3, 4]]"""
+	codes = """a = "hello" + "world"
+	"""
 	trees = ArrayParser.parse_code(codes)
 	tree = trees[0]
 	print(tree)
@@ -109,8 +112,8 @@ if __name__ == '__main__':
 	print(tree.child(1))
 	print(type(tree.child(2)))
 	print(tree.child(2))
-	print(tree.child(2).child(0))
-	print(tree.child(2).child(1))
+	# print(tree.child(2).child(0))
+	# print(tree.child(2).child(1))
 
 
 

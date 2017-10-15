@@ -216,7 +216,7 @@ class ArrayLiteral(ASTList):
 		return self.child_count
 
 	def __str__(self):
-		return '[' + ' '.join(map(str, self._children)) +  ']'
+		return '[' + ', '.join(map(str, self._children)) +  ']'
 
 
 class ArrayRef(Postfix):

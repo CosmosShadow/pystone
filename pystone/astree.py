@@ -178,6 +178,43 @@ class Fun(ASTList):
 		return '(fun ' + str(self.parameters()) + ' ' + str(self.body()) + ')'
 
 
+class ClassBody(ASTList):
+	pass
+
+
+class ClassStmnt(ASTList):
+	def name(self):
+		return self.child(0).token().text
+
+	def super_class(self):
+		if self.child_count < 3:
+			return None
+		else:
+			return self.child(1).token().text
+
+	def body(self):
+		return self.child(self.child_count - 1)
+
+	def __str__(self):
+		parent = self.super_class()
+		parent = parent or '*'
+		return "(class " + self.name() + " " + parent + " " + body() + ")"
+
+
+class Dot(Postfix):
+	def name(self):
+		self.child(0).token().text
+
+	def __str__(self):
+		return "." + self.name()
+
+
+
+
+
+
+
+
 
 
 

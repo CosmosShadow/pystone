@@ -147,7 +147,7 @@ class TestInterpreter(object):
 
 
 if __name__ == '__main__':
-	interperter = Interpreter(kind='native')
+	interperter = Interpreter(kind='class')
 	code = """
 	a = "12"
 	print(a)

@@ -21,6 +21,10 @@ class EvalException(StoneException):
 		super(EvalException, self).__init__(msg)
 
 
+class AccessException(Exception):
+	pass
+
+
 
 
 

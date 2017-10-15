@@ -2,8 +2,9 @@
 from __future__ import absolute_import
 from __future__ import print_function
 from __future__ import division
-from .enviroment import Enviroment
 
+from .enviroment import Enviroment
+from .exception import *
 
 class NestedEnv(Enviroment):
 	def __init__(self, outer=None):

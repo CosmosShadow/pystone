@@ -25,9 +25,9 @@ class ClassParser(ClosureParser):
 
 		self.member = rule().or_(self.def_, self.simple)
 		self.classbody = rule(ClassBody).sep("{").option(self.member).repeat(rule().sep(";", Token.EOL).option(self.member)).sep("}")
-		self.defclass = rule(ClassStmnt).sep("class").identifier(reserved).option(rule().sep("extends").identifier(reserved)).ast(classbody)
+		self.defclass = rule(ClassStmnt).sep("class").identifier(self.reserved_arr).option(rule().sep("extends").identifier(self.reserved_arr)).ast(self.classbody)
 
-		self.postfix.insert_choice(rule(Dot).sep(".").identifier(reserved))
+		self.postfix.insert_choice(rule(Dot).sep(".").identifier(self.reserved_arr))
 		self.program.insert_choice(self.defclass)
 
 

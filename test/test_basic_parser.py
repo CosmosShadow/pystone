@@ -47,7 +47,9 @@ class TestBasicParser(object):
 
 
 if __name__ == '__main__':
-	trees = BasicParser.parse_code('\n')
+	codes = """a = "hello" + "world"
+	"""
+	trees = BasicParser.parse_code(codes)
 	print(trees[0])
 
 

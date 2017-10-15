@@ -19,7 +19,7 @@ class Lexer(object):
 	punctuation = punctuation.replace('/', '')
 	re_number = "[0-9]+"
 	re_identifier = "[A-Za-z][A-Za-z0-9]*|==|<=|>=|&&|\\|\\||[%s]" % punctuation
-	re_string = '"((\\"|\\\\|\\n|[^"])*)"'
+	re_string = '"((\\\\"|\\\\|\\n|[^"])*)"'
 	re_comment = "//.*"
 	regex_pat = "\\s*((%s)|(%s)|(%s)|%s)?" % (re_number, re_identifier, re_comment, re_string)
 

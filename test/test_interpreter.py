@@ -116,19 +116,43 @@ class TestInterpreter(object):
 
 		assert_equal(results[-3:], [1, 2, 1])
 
+	def test_native_int(self):
+		code = """
+		a = "12"
+		b = 5 + int(a)
+		"""
+		interperter = Interpreter(kind='native')
+		results = interperter.run(code)
+		assert_equal(results, ['12', 17])
+
+	def test_native_len(self):
+		code = """
+		a = "12"
+		b = len(a)
+		"""
+		interperter = Interpreter(kind='native')
+		results = interperter.run(code)
+		assert_equal(results, ['12', 2])
+
+	def test_native_len(self):
+		code = """
+		a = "12"
+		print(a)
+		"""
+		interperter = Interpreter(kind='native')
+		results = interperter.run(code)
+		assert_equal(results, ['12', 0])
+
+
+
 
 if __name__ == '__main__':
 	interperter = Interpreter(kind='native')
 	code = """
-	def counter (c) {
-		fun () { c = c + 1 }
-	}
-	c1 = counter(0)
-	c2 = counter(0)
-	c1()
-	c1()
-	c2()
+	a = "12"
+	print(a)
 	"""
+	# ['12', 17]
 	results = interperter.run(code)
 	print(results)
 

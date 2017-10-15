@@ -23,9 +23,9 @@ class NativeFunction(object):
 
 	def invoke(self, args, tree):
 		try:
-			self._method(args)
+			return self._method(*args)
 		except Exception as e:
-			raise StoneException("bad native function call: " + name, tree)
+			raise StoneException("bad native function call: " + self._name, tree)
 
 
 arguments_old_eval = Arguments.eval

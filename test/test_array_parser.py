@@ -100,16 +100,17 @@ class TestArrayParser(object):
 
 
 if __name__ == '__main__':
-	codes = """a = [2, 3, 4]
-	a[1]
-	a[1] = "three"
-	a[1]
-	b = [["one", 1], ["two", 2]]
-	b[1][0] + b[1][1]"""
+	codes = """b = [["one", 1], ["two", 2]]"""
 	trees = ArrayParser.parse_code(codes)
-	for tree in trees:
-		print(tree)
-
+	tree = trees[0]
+	print(tree)
+	print(tree.child_count)
+	print(tree.child(0))
+	print(tree.child(1))
+	print(type(tree.child(2)))
+	print(tree.child(2))
+	print(tree.child(2).child(0))
+	print(tree.child(2).child(1))
 
 
 
